@@ -30,7 +30,9 @@ export const OrderDetailsScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
         <Text style={styles.title}>Заказ №{order.id}</Text>
 
@@ -112,6 +114,19 @@ export const OrderDetailsScreen = () => {
             </Text>
           </View>
         </View>
+        <View style={styles.divider} />
+
+        <View>
+          <Text style={styles.label}>Состав заказа</Text>
+          {order.products.map(product => (
+            <View key={product.id} style={styles.productCard}>
+              <View style={styles.productRow}>
+                <Text style={styles.productName}>{product.name}</Text>
+                <Text style={styles.productQty}>x{product.quantity}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -121,7 +136,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     backgroundColor: '#F9FAFB',
-    height: '100%',
+    flexGrow: 1,
   },
   card: {
     backgroundColor: '#fff',
@@ -132,6 +147,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     shadowOffset: {width: 0, height: 4},
+    marginBottom: 50,
   },
   title: {
     fontSize: 22,
@@ -169,5 +185,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  productCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#F3F4F6',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginTop: 8,
+  },
+  productName: {
+    fontSize: 15,
+    color: '#1F2937',
+    fontWeight: '500',
+  },
+  productRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  productQty: {
+    fontSize: 15,
+    color: '#6B7280',
   },
 });

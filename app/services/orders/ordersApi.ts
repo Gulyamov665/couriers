@@ -64,7 +64,7 @@ export const ordersApi = createApi({
       }),
       providesTags: ['orders'],
     }),
-    getOrderById: build.query({
+    getOrderById: build.query<OrdersType, string>({
       query: id => ({
         url: `/orders/getOrderById/${id}`,
       }),

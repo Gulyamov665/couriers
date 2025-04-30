@@ -11,31 +11,9 @@ import {
 import {useAuthMutation} from '../../services/auth/authApi';
 
 export const LoginScreen = () => {
-  //   const navigation =
-  //     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [phone, setPhone] = useState('');
   const [auth, {isLoading}] = useAuthMutation();
   const [password, setPassword] = useState('');
-
-  // const {setUser} = useActions();
-
-  //   const fadeAnim = useRef(new Animated.Value(0)).current // Начальное значение прозрачности = 0
-  //   const translateY = useRef(new Animated.Value(20)).current // Начальное значение сдвига вниз
-
-  //   useEffect(() => {
-  //     Animated.parallel([
-  //       Animated.timing(fadeAnim, {
-  //         toValue: 1,
-  //         duration: 600,
-  //         useNativeDriver: true,
-  //       }),
-  //       Animated.timing(translateY, {
-  //         toValue: 0,
-  //         duration: 600,
-  //         useNativeDriver: true,
-  //       }),
-  //     ]).start()
-  //   }, [])
 
   const handleLogin = async () => {
     await auth({phone, password}).unwrap();

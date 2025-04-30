@@ -25,7 +25,7 @@ const BottomTabs = () => {
           let iconName: typeof MaterialCommunityIcons.defaultProps.name =
             'home';
 
-          if (route.name === 'Home') iconName = 'home';
+          if (route.name === 'Home') iconName = 'newspaper-plus';
           else if (route.name === 'Orders') iconName = 'clipboard-list';
           else if (route.name === 'Profile') iconName = 'account';
 

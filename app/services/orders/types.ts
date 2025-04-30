@@ -14,27 +14,6 @@ export type RestaurantOrderType = {
   phone: number;
 };
 
-export type OrdersType = {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  created_by: string | null;
-  total_price: string;
-  lat: string;
-  long: string;
-  user_id: number;
-  restaurant: RestaurantOrderType;
-  products: OrderProduct[];
-  status: string;
-};
-
-export type OrdersData = {
-  data: OrdersType[];
-  last_page: number;
-  page: number;
-  total: number;
-};
-
 export type UserLocationType = {
   lat: string;
   long: string;
@@ -48,6 +27,28 @@ export type UserLocationType = {
   is_active?: boolean;
   street?: string;
   user: number;
+};
+
+export type OrdersType = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  created_by: string | null;
+  total_price: string;
+  lat: string;
+  long: string;
+  user_id: number;
+  restaurant: RestaurantOrderType;
+  products: OrderProduct[];
+  status: string;
+  location: UserLocationType;
+};
+
+export type OrdersData = {
+  data: OrdersType[];
+  last_page: number;
+  page: number;
+  total: number;
 };
 
 export type UserInfoType = {

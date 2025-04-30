@@ -1,16 +1,28 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import {useActions} from '../../hooks/useActions';
+import {useNotification} from '../../hooks/useNotification';
+import * as Keychain from 'react-native-keychain';
+import {getAccessToken} from '../tools/tools';
 
 export const ProfileScreen = () => {
   const {logout} = useActions();
+  const token = useNotification();
   const user = {
     name: 'Убегай Сабир',
     email: 'ubejal@example.com',
     avatar: 'https://i.pravatar.cc/300', // пример аватарки
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await Keychain.resetGenericPassword();
     logout();
   };
 
@@ -23,7 +35,13 @@ export const ProfileScreen = () => {
       </View>
 
       <View style={styles.separator} />
-
+      <TextInput
+        value={token || ''}
+        style={styles.tokenInput}
+        editable={true}
+        selectTextOnFocus={true}
+        multiline={true}
+      />
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Выйти</Text>
       </TouchableOpacity>
@@ -75,5 +93,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  tokenInput: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    minHeight: 50,
   },
 });

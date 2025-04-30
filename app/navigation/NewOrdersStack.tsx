@@ -1,28 +1,29 @@
-import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { HomeScreen } from '../screens/HomeScreen'
-import { OrderDetailsScreen } from '../screens/OrderDetailsScreen'
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {HomeScreen} from '../screens/HomeScreen';
+import {OrderDetailsScreen} from '../screens/OrderDetailsScreen';
+import {OrdersScreen} from '../screens/orders/OrdersScreen';
 
 export type OrdersStackParamList = {
-  OrdersList: undefined
-  OrderDetails: { id: string }
-}
+  OrdersList: undefined;
+  OrderDetails: {id: string};
+};
 
-const Stack = createNativeStackNavigator<OrdersStackParamList>()
+const Stack = createNativeStackNavigator<OrdersStackParamList>();
 
 export const NewOrdersStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="OrdersList"
-        component={HomeScreen}
-        options={{ title: 'Новые заказы' }}
+        component={OrdersScreen}
+        options={{title: 'Новые заказы'}}
       />
       <Stack.Screen
         name="OrderDetails"
         component={OrderDetailsScreen}
-        options={{ title: 'Детали заказа' }}
+        options={{title: 'Детали заказа'}}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};

@@ -3,16 +3,15 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BottomTabs from './BottomTabs';
 import {LoginScreen} from '../screens/login/LoginScreen';
-import {useSelector} from 'react-redux';
-import {authState} from '../../store/slices/auth';
 import {ErrorBoundary} from '../config/ErrorBoundary';
+import {useCheckAuth} from '../../hooks/useCheckAuth';
+import {Loader} from '../components/Loader';
 
 export type RootStackParamList = {
   Main: undefined;
   Login: undefined;
   Orders: undefined;
   OrdersList: undefined;
-
   Home: undefined;
   OrderDetails: {id: string};
 };
@@ -20,7 +19,9 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator = () => {
-  const {isAuthenticated} = useSelector(authState);
+  const {isAuthenticated, isChecking} = useCheckAuth();
+
+  if (isChecking) return <Loader />;
 
   return (
     <ErrorBoundary>

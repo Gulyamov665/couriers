@@ -7,25 +7,26 @@ import {
   useUpdateOrderMutation,
 } from '../../services/orders/ordersApi';
 import {ActivityIndicator} from 'react-native-paper';
+import {useFocusEffect} from '@react-navigation/native';
+import {useCallback} from 'react';
 
 export const OrdersScreen = () => {
-  const {data, refetch, isLoading } = useGetOrdersQuery();
-  const [updateOrder] = useUpdateOrderMutation();
+  const {data, refetch, isLoading} = useGetOrdersQuery();
+  const [updateOrder, {isLoading: updateOrderLoader}] =
+    useUpdateOrderMutation();
 
   useSocket(data => {
-    // Notifications.scheduleNotificationAsync({
-    //   content: {
-    //     title: '📦 Новый заказ!',
-    //     body: `Новый заказ #${data.id}`,
-    //   },
-    //   trigger: {
-    //     channelId: 'default',
-    //     repeats: false,
-    //     type: 'timeInterval',
-    //   } as Notifications.NotificationTriggerInput,
-    // })
     refetch();
   });
+
+  //Переотправляем запрос при фокусе
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+      // если бы нужно было что-то при анфокусе сделать — вернули бы функцию
+      return () => {};
+    }, [refetch]),
+  );
 
   const handleUpdateOrder = async (id: number, status: string) => {
     await updateOrder({id, body: {status}}).unwrap();
@@ -47,6 +48,7 @@ export const OrdersScreen = () => {
         renderItem={({item}) => (
           <OrderCard
             order={item}
+            isLoading={updateOrderLoader}
             onAccept={() => handleUpdateOrder(item.id, 'prepare')}
             onDecline={() => handleUpdateOrder(item.id, 'canceled')}
           />

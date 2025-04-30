@@ -1,156 +1,74 @@
-// import React from 'react'
-// import { View, Text, StyleSheet } from 'react-native'
-// import { Order } from '../types/order'
-// import { useNavigation } from '@react-navigation/native'
-// import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-// import { RootStackParamList } from '../navigation/RootNavigator'
-// import { TouchableOpacity } from 'react-native'
-
-// interface Props {
-//   order: Order
-// }
-
-// const statusColor = {
-//   new: '#FFA500',
-//   delivered: '#4CAF50',
-//   cancelled: '#F44336',
-// }
-
-// export const OrderCard = ({ order }: Props) => {
-//   const navigation =
-//     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-//   return (
-//     <TouchableOpacity
-//       onPress={() =>
-//         navigation.navigate('OrderDetails', { id: String(order.id) })
-//       }
-//     >
-//       <View style={styles.card}>
-//         <Text style={styles.name}>Номер заказа №{order.id}</Text>
-//         <Text style={styles.name}>{order.created_by}</Text>
-//         <Text>{'Ул. Мустакллик 1-84'}</Text>
-//         <Text style={styles.price}>Сумма: {order.total_price} ₽</Text>
-//         <Text style={{ color: statusColor['new'] }}>
-//           Статус:{' '}
-//           {order.status === 'new'
-//             ? 'Новый'
-//             : order.status === 'delivered'
-//             ? 'Доставлен'
-//             : 'Отменён'}
-//         </Text>
-//         <Text style={styles.date}>
-//           {new Date(order.created_at).toLocaleString()}
-//         </Text>
-//       </View>
-//     </TouchableOpacity>
-//   )
-// }
-
-// const styles = StyleSheet.create({
-//   card: {
-//     padding: 16,
-//     borderRadius: 12,
-//     backgroundColor: '#fff',
-//     marginBottom: 12,
-//     elevation: 2,
-//     shadowColor: '#000',
-//     shadowOpacity: 0.1,
-//     shadowRadius: 5,
-//   },
-//   name: {
-//     fontWeight: 'bold',
-//     fontSize: 16,
-//   },
-//   price: {
-//     marginTop: 4,
-//     fontWeight: '600',
-//   },
-//   date: {
-//     marginTop: 4,
-//     fontSize: 12,
-//     color: '#888',
-//   },
-// })
-
-// components/OrderCard.tsx
-
-import React, { useRef } from 'react'
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Animated,
-  Pressable,
-} from 'react-native'
-import { Order } from '../types/order'
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../navigation/RootNavigator'
+  ActivityIndicator,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigation/RootNavigator';
+import {OrdersType} from '../services/orders/types';
 
 type OrderCardProps = {
-  order: Order
-  onAccept: () => void
-  onDecline: () => void
-}
+  order: OrdersType;
+  onAccept: () => void;
+  onDecline: () => void;
+  isLoading: boolean;
+};
 
-export const OrderCard = ({ order, onAccept, onDecline }: OrderCardProps) => {
+export const OrderCard = ({
+  order,
+  onAccept,
+  onDecline,
+  isLoading,
+}: OrderCardProps) => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-  const translateY = useRef(new Animated.Value(0)).current
-
-  const handlePressIn = () => {
-    Animated.spring(translateY, {
-      toValue: -4, // немного приподнимаем
-      useNativeDriver: true,
-      speed: 50,
-      bounciness: 5,
-    }).start()
-  }
-
-  const handlePressOut = () => {
-    Animated.spring(translateY, {
-      toValue: 0,
-      useNativeDriver: true,
-      speed: 50,
-      bounciness: 5,
-    }).start()
-  }
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate('OrderDetails', { id: String(order.id) })
-      }
-    >
+        navigation.navigate('OrderDetails', {id: String(order.id)})
+      }>
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.orderId}>Заказ #{order.id}</Text>
-          <Text style={styles.price}>{order.total_price} сум</Text>
+          <Text style={styles.price}>
+            {Number(order.total_price).toLocaleString()} сум
+          </Text>
         </View>
 
-        <Text style={styles.customer}>{order.created_by}</Text>
-        <Text style={styles.address}>{'order.address'}</Text>
+        <Text style={styles.customer}>Клиент: {order.created_by}</Text>
+        <Text style={styles.address}>{order.location.address}</Text>
 
         <View style={styles.buttons}>
           <TouchableOpacity
-            style={[styles.button, styles.accept]}
+            style={[
+              styles.button,
+              styles.accept,
+              isLoading && styles.buttonDisabled,
+            ]}
             onPress={onAccept}
-          >
-            <Text style={styles.buttonText}>Принять</Text>
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Принять</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.decline]}
-            onPress={onDecline}
-          >
+            onPress={onDecline}>
             <Text style={styles.buttonText}>Отклонить</Text>
           </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   card: {
@@ -162,7 +80,7 @@ const styles = StyleSheet.create({
     // shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
   },
   header: {
     flexDirection: 'row',
@@ -208,4 +126,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
   },
-})
+  buttonDisabled: {
+    opacity: 0.6,
+    backgroundColor: '#85E0A3',
+  },
+});

@@ -4,7 +4,7 @@ import {jwtDecode, JwtPayload} from 'jwt-decode';
 import listenerMiddleware from './listenerMiddleware';
 import * as Keychain from 'react-native-keychain'; // Импортируем Keychain
 
-interface CustomJwtPayload extends JwtPayload {
+export interface CustomJwtPayload extends JwtPayload {
   token_type: string;
   exp: number;
   iat: number;
