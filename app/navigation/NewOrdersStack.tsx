@@ -1,6 +1,5 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import {HomeScreen} from '../screens/HomeScreen';
 import {OrderDetailsScreen} from '../screens/OrderDetailsScreen';
 import {OrdersScreen} from '../screens/orders/OrdersScreen';
 

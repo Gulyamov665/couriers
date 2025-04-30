@@ -7,8 +7,9 @@ import {
   useUpdateOrderMutation,
 } from '../../services/orders/ordersApi';
 import {ActivityIndicator} from 'react-native-paper';
-import {useFocusEffect} from '@react-navigation/native';
-import {useCallback} from 'react';
+// import {useFocusEffect} from '@react-navigation/native';
+// import {useCallback} from 'react';
+import {useSmartRefetch} from '../../../hooks/useSmartRefetch';
 
 export const OrdersScreen = () => {
   const {data, refetch, isLoading} = useGetOrdersQuery();
@@ -19,14 +20,15 @@ export const OrdersScreen = () => {
     refetch();
   });
 
-  //Переотправляем запрос при фокусе
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-      // если бы нужно было что-то при анфокусе сделать — вернули бы функцию
-      return () => {};
-    }, [refetch]),
-  );
+  useSmartRefetch(refetch);
+  // //Переотправляем запрос при фокусе
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     refetch();
+  //     // если бы нужно было что-то при анфокусе сделать — вернули бы функцию
+  //     return () => {};
+  //   }, [refetch]),
+  // );
 
   const handleUpdateOrder = async (id: number, status: string) => {
     await updateOrder({id, body: {status}}).unwrap();
