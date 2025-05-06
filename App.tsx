@@ -3,8 +3,9 @@ import {Provider} from 'react-redux';
 import {store} from './store';
 import {PaperProvider} from 'react-native-paper';
 import {RootNavigator} from './app/navigation/RootNavigator';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {useNotification} from './hooks/useNotification';
+import {StatusBar} from 'react-native';
 
 export default function App() {
   useNotification();
@@ -12,11 +13,14 @@ export default function App() {
   return (
     <React.StrictMode>
       <SafeAreaProvider>
-        <Provider store={store}>
-          <PaperProvider>
-            <RootNavigator />
-          </PaperProvider>
-        </Provider>
+        <SafeAreaView style={{flex: 1}}>
+          <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+          <Provider store={store}>
+            <PaperProvider>
+              <RootNavigator />
+            </PaperProvider>
+          </Provider>
+        </SafeAreaView>
       </SafeAreaProvider>
     </React.StrictMode>
   );

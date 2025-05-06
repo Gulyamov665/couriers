@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
 import io from 'socket.io-client';
 
-export const useSocket = (newOrder: (data: any) => void) => {
+export const useSocket = (updateOrders: () => void) => {
   const socketRef = useRef<any>(null);
 
   useEffect(() => {
@@ -22,10 +22,11 @@ export const useSocket = (newOrder: (data: any) => void) => {
       console.log('Socket connection error:', err);
     });
 
-    socket.on('update_order', newOrder);
+    socket.on('update_order', () => updateOrders());
+    socket.on('update_order', () => console.log('new'));
 
     return () => {
-      socket.off('update_order', newOrder);
+      socket.off('update_order', updateOrders);
       socket.disconnect();
     };
   }, []);

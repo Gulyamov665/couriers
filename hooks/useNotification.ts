@@ -1,81 +1,3 @@
-// import {useEffect, useState} from 'react';
-// import {PermissionsAndroid} from 'react-native';
-// import {getApp} from '@react-native-firebase/app';
-// import {
-//   getMessaging,
-//   getToken,
-//   onMessage,
-// } from '@react-native-firebase/messaging';
-// import notifee, {AndroidImportance} from '@notifee/react-native';
-
-// const createNotificationChannel = async () => {
-//   const channelId = await notifee.createChannel({
-//     id: 'default',
-//     name: 'Default Channel',
-//     sound: 'default',
-//     importance: AndroidImportance.HIGH,
-//     vibration: true,
-//     vibrationPattern: [300, 500],
-//   });
-//   return channelId;
-// };
-
-// const requestUserPermission = async () => {
-//   const granted = await PermissionsAndroid.request(
-//     PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-//   );
-
-//   if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-//     console.log('You can use the notifications');
-//     await createNotificationChannel();
-//   } else {
-//     console.log('Notification permission denied');
-//   }
-// };
-
-// export const useNotification = (): string | null => {
-//   const [token, setToken] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     requestUserPermission();
-//     getFCMToken();
-
-//     const unsubscribe = onMessage(async remoteMessage => {
-//       console.log('Foreground message received', remoteMessage);
-
-//       await notifee.displayNotification({
-//         title: remoteMessage.notification?.title,
-//         body: remoteMessage.notification?.body,
-//         android: {
-//           channelId: 'default',
-//           sound: 'default',
-//           importance: AndroidImportance.HIGH,
-//           vibrationPattern: [300, 500],
-//           pressAction: {
-//             id: 'default',
-//           },
-//         },
-//       });
-//     });
-
-//     return unsubscribe;
-//   }, []);
-
-//   const getFCMToken = async () => {
-//     try {
-//       const app = getApp();
-//       const messaging = getMessaging(app);
-//       const fcmToken = await getToken(messaging);
-//       console.log('Your Firebase Token is:', fcmToken);
-//       setToken(fcmToken);
-//     } catch (error) {
-//       console.log('Error getting token', error);
-//     }
-//   };
-
-//   return token;
-// };
-
 import {useEffect, useState} from 'react';
 import {PermissionsAndroid} from 'react-native';
 import {getApp} from '@react-native-firebase/app';
@@ -89,8 +11,8 @@ import notifee, {AndroidImportance} from '@notifee/react-native';
 const createNotificationChannel = async () => {
   await notifee.createChannel({
     id: 'aurora',
-    name: 'Default Channel',
-    sound: 'raw/my_sound',
+    name: 'aurora',
+    sound: 'sound1',
     importance: AndroidImportance.HIGH,
     vibration: true,
     vibrationPattern: [300, 500],
@@ -129,7 +51,7 @@ export const useNotification = (): string | null => {
           body: remoteMessage.notification?.body,
           android: {
             channelId: 'aurora',
-            sound: 'raw/my_sound',
+            sound: 'sound1',
             importance: AndroidImportance.HIGH,
             vibrationPattern: [300, 500],
             pressAction: {

@@ -16,7 +16,7 @@ export const NewOrdersStack = () => {
       <Stack.Screen
         name="OrdersList"
         component={OrdersScreen}
-        options={{title: 'Новые заказы'}}
+        options={{title: 'Новые заказы', headerShown: false}}
       />
       <Stack.Screen
         name="OrderDetails"

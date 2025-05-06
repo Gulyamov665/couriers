@@ -7,11 +7,3 @@ export type RestaurantOrderType = {
   address: string;
   phone: number;
 };
-
-type OrderProduct = {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  photo: string;
-};

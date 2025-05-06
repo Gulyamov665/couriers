@@ -4,6 +4,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {OrdersStack} from './OrdersStack';
 import {NewOrdersStack} from './NewOrdersStack';
 import {ProfileScreen} from '../screens/ProfileScreen';
+import {CourierDashboard} from '../screens/dashboard/CurierDashboard';
+import {OrderHistory} from '../screens/orders/OrdersHistory';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +44,8 @@ const BottomTabs = () => {
       <Tab.Screen name="Home" component={NewOrdersStack} />
       <Tab.Screen name="Orders" component={OrdersStack} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Dashboard" component={CourierDashboard} />
+      <Tab.Screen name="History" component={OrderHistory} />
     </Tab.Navigator>
   );
 };

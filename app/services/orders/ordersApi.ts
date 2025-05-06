@@ -1,45 +1,12 @@
-import {
-  BaseQueryFn,
-  createApi,
-  FetchArgs,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-} from '@reduxjs/toolkit/query/react';
+import {createApi} from '@reduxjs/toolkit/query/react';
 import {OrdersType} from './types';
-import {getAccessToken} from '../../tools/tools';
 
-const url = 'https://new.aurora-api.uz/api-node/api'; // URL вашего API
-
-export const baseQuery = fetchBaseQuery({
-  baseUrl: url,
-  prepareHeaders: async headers => {
-    const token = await getAccessToken();
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
-    }
-    return headers;
-  },
-});
-
-const baseQueryWithInterceptor: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
-  const result = await baseQuery(args, api, extraOptions);
-
-  if (result.error?.status === 500) {
-    console.error('Ошибка 500: проблема на сервере', result.error);
-    const errorData = result.error.data as {message: string};
-    // alert(`${errorData.message}! Попробуйте позже.`)
-  }
-  return result;
-};
+import {baseInterceptor} from '../config/base';
 
 export const ordersApi = createApi({
   reducerPath: 'orders',
   tagTypes: ['orders', 'cart'],
-  baseQuery: baseQueryWithInterceptor,
+  baseQuery: baseInterceptor,
 
   endpoints: build => ({
     getOrders: build.query<OrdersType[], void>({
@@ -47,6 +14,15 @@ export const ordersApi = createApi({
         url: `/orders/status`,
         params: {status: 'awaiting_courier'},
       }),
+      onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
+        console.log('Query Started Orders:', arg);
+        try {
+          const result = await queryFulfilled;
+          console.log('Query Success Orders:', result.data);
+        } catch (error) {
+          console.error('Query Error Orders:', error);
+        }
+      },
       providesTags: ['orders'],
     }),
     updateOrder: build.mutation({

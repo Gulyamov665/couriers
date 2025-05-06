@@ -12,12 +12,13 @@ export const OrdersStack = () => {
       <Stack.Screen
         name="OrdersList"
         component={HomeScreen}
-        options={{title: 'Список заказов'}}
+        // options={{title: 'Список заказов'}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="OrderDetails"
         component={OrderDetailsScreen}
-        options={{title: 'Детали заказа'}}
+        // options={{title: 'Детали заказа'}}
       />
     </Stack.Navigator>
   );

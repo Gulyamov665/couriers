@@ -10,7 +10,6 @@ import {
 import {useActions} from '../../hooks/useActions';
 import {useNotification} from '../../hooks/useNotification';
 import * as Keychain from 'react-native-keychain';
-import {getAccessToken} from '../tools/tools';
 
 export const ProfileScreen = () => {
   const {logout} = useActions();

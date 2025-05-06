@@ -21,14 +21,12 @@ listenerMiddleware.startListening({
   matcher: userAuth.endpoints.auth.matchFulfilled,
   effect: async (action, listenerApi) => {
     const {access, refresh} = action.payload;
-
     try {
       // Сохраняем токены в Keychain
       await Keychain.setGenericPassword(
         'auth',
         JSON.stringify({access, refresh}),
       );
-
       const user = jwtDecode<CustomJwtPayload>(access);
       listenerApi.dispatch(setUser(user));
     } catch (error) {
