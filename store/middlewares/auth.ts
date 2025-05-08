@@ -1,5 +1,5 @@
 import {userAuth} from '../../app/services/auth/authApi';
-import {setUser} from '../slices/auth';
+import {setIsAuthenticated} from '../slices/auth';
 import {jwtDecode, JwtPayload} from 'jwt-decode';
 import listenerMiddleware from './listenerMiddleware';
 import * as Keychain from 'react-native-keychain'; // Импортируем Keychain
@@ -28,7 +28,7 @@ listenerMiddleware.startListening({
         JSON.stringify({access, refresh}),
       );
       const user = jwtDecode<CustomJwtPayload>(access);
-      listenerApi.dispatch(setUser(user));
+      listenerApi.dispatch(setIsAuthenticated(!!user));
     } catch (error) {
       console.error('Ошибка при сохранении токенов в Keychain', error);
     }

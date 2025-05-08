@@ -1,12 +1,11 @@
 import {createApi} from '@reduxjs/toolkit/query/react';
 import {OrdersType} from './types';
-
-import {baseInterceptor} from '../config/base';
+import {baseInterceptor, ordersQuery} from '../config/base';
 
 export const ordersApi = createApi({
   reducerPath: 'orders',
   tagTypes: ['orders', 'cart'],
-  baseQuery: baseInterceptor,
+  baseQuery: ordersQuery,
 
   endpoints: build => ({
     getOrders: build.query<OrdersType[], void>({
@@ -14,15 +13,15 @@ export const ordersApi = createApi({
         url: `/orders/status`,
         params: {status: 'awaiting_courier'},
       }),
-      onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
-        console.log('Query Started Orders:', arg);
-        try {
-          const result = await queryFulfilled;
-          console.log('Query Success Orders:', result.data);
-        } catch (error) {
-          console.error('Query Error Orders:', error);
-        }
-      },
+      // onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
+      //   console.log('Query Started Orders:', arg);
+      //   try {
+      //     const result = await queryFulfilled;
+      //     console.log('Query Success Orders:', result.data);
+      //   } catch (error) {
+      //     console.error('Query Error Orders:', error);
+      //   }
+      // },
       providesTags: ['orders'],
     }),
     updateOrder: build.mutation({
@@ -43,6 +42,12 @@ export const ordersApi = createApi({
     getOrderById: build.query<OrdersType, string>({
       query: id => ({
         url: `/orders/getOrderById/${id}`,
+      }),
+      providesTags: ['orders'],
+    }),
+    getCourierOrders: build.query<OrdersType[], number>({
+      query: id => ({
+        url: `/orders/getCourierOrders/${id}`,
       }),
       providesTags: ['orders'],
     }),
@@ -108,4 +113,5 @@ export const {
   useRemoveCartMutation,
   useGetOrderByIdQuery,
   useUpdateOrderMutation,
+  useGetCourierOrdersQuery,
 } = ordersApi;

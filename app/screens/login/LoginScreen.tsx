@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -6,14 +6,32 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
+  Animated,
 } from 'react-native';
-
 import {useAuthMutation} from '../../services/auth/authApi';
+import {formatPhoneNumber, handleChange} from '../../tools/tools';
 
 export const LoginScreen = () => {
   const [phone, setPhone] = useState('');
-  const [auth, {isLoading}] = useAuthMutation();
+  const [auth, {isLoading, error}] = useAuthMutation();
   const [password, setPassword] = useState('');
+  const errorAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (error && phone.length === 13) {
+      Animated.timing(errorAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(errorAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [error, phone.length]);
 
   const handleLogin = async () => {
     await auth({phone, password}).unwrap();
@@ -25,12 +43,14 @@ export const LoginScreen = () => {
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        textContentType="telephoneNumber"
+        placeholder="Номер телефона"
         placeholderTextColor="#888"
-        value={phone}
-        onChangeText={setPhone}
-        keyboardType="email-address"
+        value={formatPhoneNumber(phone)}
+        onChangeText={num => handleChange(num, setPhone)}
+        keyboardType="phone-pad"
         autoCapitalize="none"
+        maxLength={16}
       />
 
       <TextInput
@@ -40,7 +60,16 @@ export const LoginScreen = () => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        autoCapitalize="none"
       />
+
+      <Animated.View style={{opacity: errorAnim, minHeight: 22}}>
+        {error ? (
+          <Text style={styles.errorText}>
+            Неверный номер телефона или пароль
+          </Text>
+        ) : null}
+      </Animated.View>
 
       <TouchableOpacity
         style={styles.button}
@@ -93,5 +122,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+  },
+  errorText: {
+    color: '#FF3B30',
+    fontSize: 15,
+    marginBottom: 3,
+    textAlign: 'center',
   },
 });

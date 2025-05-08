@@ -1,8 +1,16 @@
 import {useDispatch} from 'react-redux';
 import {bindActionCreators} from '@reduxjs/toolkit';
-import {logout, setIsAuthenticated, setUser} from '../store/slices/auth';
+import {
+  logout,
+  setFCMToken,
+  setIsAuthenticated,
+  setUser,
+} from '../store/slices/auth';
 
 export const useActions = () => {
   const dispatch = useDispatch();
-  return bindActionCreators({setUser, logout, setIsAuthenticated}, dispatch);
+  return bindActionCreators(
+    {setUser, logout, setIsAuthenticated, setFCMToken},
+    dispatch,
+  );
 };

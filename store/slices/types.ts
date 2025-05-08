@@ -1,5 +1,8 @@
+import {UserInfoType} from '../../app/services/orders/types';
+
 export type AuthInitialState = {
-  user: {} | null
-  token: boolean
-  isAuthenticated: boolean
-}
+  user: UserInfoType | null;
+  token: boolean;
+  isAuthenticated: boolean;
+  fcmToken: string;
+};

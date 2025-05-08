@@ -8,7 +8,10 @@ export const useSocket = (updateOrders: () => void) => {
     const socket = io('https://new.aurora-api.uz', {
       transports: ['websocket'],
       forceNew: true,
-      reconnectionAttempts: 5,
+      reconnection: true, // по умолчанию true, но можно указать явно
+      reconnectionDelay: 2000, // начальная задержка между попытками
+      reconnectionDelayMax: 5000, // максимальная задержка
+      reconnectionAttempts: Infinity,
       timeout: 10000,
       path: '/api-node/socket.io',
     });
@@ -16,6 +19,11 @@ export const useSocket = (updateOrders: () => void) => {
 
     socket.on('connect', () => {
       console.log('✅ Socket connected');
+      updateOrders();
+    });
+
+    socket.on('disconnect', reason => {
+      console.warn('⚠️ Socket disconnected:', reason);
     });
 
     socket.on('connect_error', err => {
@@ -23,7 +31,6 @@ export const useSocket = (updateOrders: () => void) => {
     });
 
     socket.on('update_order', () => updateOrders());
-    socket.on('update_order', () => console.log('new'));
 
     return () => {
       socket.off('update_order', updateOrders);

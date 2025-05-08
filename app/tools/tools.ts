@@ -19,3 +19,29 @@ export const isTokenExpired = (token: string): boolean => {
     return true;
   }
 };
+
+export const formatPhoneNumber = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 12); // максимум 12 цифр (+998934733223)
+  let result = '';
+
+  if (digits.length > 0) result += '+' + digits.slice(0, 3); // код страны
+  if (digits.length >= 4) result += ' ' + digits.slice(3, 5); // код оператора
+  if (digits.length >= 6) result += ' ' + digits.slice(5, 8); // первая часть номера
+  if (digits.length >= 9) result += ' ' + digits.slice(8, 12); // вторая часть номера
+
+  return result.trim();
+};
+
+export const handleChange = (
+  text: string,
+  setPhone: React.Dispatch<React.SetStateAction<string>>,
+) => {
+  // Удаляем только пробелы, но оставляем +
+  const digits = text.replace(/ /g, '');
+  setPhone(digits.startsWith('+') ? digits : '+' + digits);
+};
+
+
+export const getUser =  () =>{
+
+}

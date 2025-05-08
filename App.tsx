@@ -4,12 +4,9 @@ import {store} from './store';
 import {PaperProvider} from 'react-native-paper';
 import {RootNavigator} from './app/navigation/RootNavigator';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import {useNotification} from './hooks/useNotification';
 import {StatusBar} from 'react-native';
 
 export default function App() {
-  useNotification();
-
   return (
     <React.StrictMode>
       <SafeAreaProvider>

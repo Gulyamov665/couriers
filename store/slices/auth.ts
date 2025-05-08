@@ -2,19 +2,20 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AuthInitialState} from './types';
 import {RootState} from '..';
 import * as Keychain from 'react-native-keychain';
-import {CustomJwtPayload} from '../middlewares/auth';
+import {UserInfoType} from '../../app/services/orders/types';
 
 const initialState: AuthInitialState = {
   user: null,
   token: false,
   isAuthenticated: false,
+  fcmToken: '',
 };
 
 const authSlice = createSlice({
   name: 'authState',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<CustomJwtPayload>) => {
+    setUser: (state, action: PayloadAction<UserInfoType>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
     },
@@ -29,11 +30,14 @@ const authSlice = createSlice({
     setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
     },
+    setFCMToken: (state, action: PayloadAction<string>) => {
+      state.fcmToken = action.payload;
+    },
   },
 });
 
 export const authState = (state: RootState) => state.authState;
-export const {setUser, setToken, logout, setIsAuthenticated} =
+export const {setUser, setToken, logout, setIsAuthenticated, setFCMToken} =
   authSlice.actions;
 
 export default authSlice.reducer;

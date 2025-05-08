@@ -41,7 +41,7 @@ export const baseInterceptor: BaseQueryFn<
 
     try {
       await refreshPromise;
-      const refreshedResult = await ordersQuery(args, api, extraOptions);
+      const refreshedResult = await baseQuery(args, api, extraOptions);
       return refreshedResult;
     } catch (error) {
       console.error('Refresh token error:', error);
@@ -49,7 +49,7 @@ export const baseInterceptor: BaseQueryFn<
     }
   }
 
-  const result = await ordersQuery(args, api, extraOptions);
+  const result = await baseQuery(args, api, extraOptions);
 
   if (result.error?.status === 401) {
     api.dispatch(logout());

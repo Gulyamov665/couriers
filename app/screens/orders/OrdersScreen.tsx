@@ -1,32 +1,33 @@
 import React from 'react';
-import {FlatList, View, Text, StyleSheet} from 'react-native';
+import {FlatList, View, Text, StyleSheet, RefreshControl} from 'react-native';
 import {OrderCard} from '../../components/OrderCard';
 import {useSocket} from '../../../hooks/useSocket';
 import {useGetOrdersQuery} from '../../services/orders/ordersApi';
 import {useUpdateOrderMutation} from '../../services/orders/ordersApi';
-import {ActivityIndicator} from 'react-native-paper';
-import {useSmartRefetch} from '../../../hooks/useSmartRefetch';
+import {useSelector} from 'react-redux';
+import {authState} from '../../../store/slices/auth';
 
 export const OrdersScreen = () => {
   const {data, refetch, isLoading, isFetching} = useGetOrdersQuery();
+  const {user} = useSelector(authState);
   const [updateOrder, {isLoading: updateOrderLoader}] =
     useUpdateOrderMutation();
 
   useSocket(refetch);
 
-  useSmartRefetch(refetch);
-
   const handleUpdateOrder = async (id: number, status: string) => {
-    await updateOrder({id, body: {status}}).unwrap();
+    await updateOrder({
+      id,
+      body: {
+        status,
+        courier: {
+          id: user?.id,
+          username: `${user?.first_name}  ${user?.last_name}`,
+          phone_number: user?.phone,
+        },
+      },
+    }).unwrap();
   };
-
-  if (isLoading || isFetching) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#FFA500" />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -43,6 +44,13 @@ export const OrdersScreen = () => {
         )}
         contentContainerStyle={styles.list}
         ListEmptyComponent={<Text style={styles.empty}>Нет новых заказов</Text>}
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetching || isLoading}
+            onRefresh={refetch}
+            colors={['#FFA500']}
+          />
+        }
       />
     </View>
   );
