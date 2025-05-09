@@ -2,7 +2,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {store} from './store';
 import {PaperProvider} from 'react-native-paper';
-import {RootNavigator} from '../app/navigation/RootNavigator';
+import {RootNavigator} from './app/navigation/RootNavigator';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'react-native';
 
