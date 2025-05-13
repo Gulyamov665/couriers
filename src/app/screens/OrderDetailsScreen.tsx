@@ -1,18 +1,24 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {View, Text, StyleSheet} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/RootNavigator';
+import {ActivityIndicator} from 'react-native-paper';
+import {useGetOrderByIdQuery} from '@store/services/orders/ordersApi';
+import {useUpdateOrderMutation} from '@store/services/orders/ordersApi';
+import {authState} from '@store/slices/auth';
+import {useSelector} from 'react-redux';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {ActivityIndicator} from 'react-native-paper';
-import {useGetOrderByIdQuery} from '@store/services/orders/ordersApi';
+import {OrderStatus} from 'common/OrderStatuses';
 
 type OrderDetailsRouteProp = RouteProp<RootStackParamList, 'OrderDetails'>;
 
 const statusColor = {
   new: '#FFA500',
-  delivered: '#4CAF50',
+  prepare: '#4CAF50',
   cancelled: '#F44336',
 };
 
@@ -20,6 +26,10 @@ export const OrderDetailsScreen = () => {
   const route = useRoute<OrderDetailsRouteProp>();
   const {id} = route.params;
   const {data: order} = useGetOrderByIdQuery(id);
+  const [updateOrder] = useUpdateOrderMutation();
+  const {user} = useSelector(authState);
+  const {navigate} =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   if (!order) {
     return (
@@ -28,6 +38,21 @@ export const OrderDetailsScreen = () => {
       </View>
     );
   }
+
+  const handleUpdateOrder = async (id: number, status: string) => {
+    await updateOrder({
+      id,
+      body: {
+        status,
+        courier: {
+          id: user?.id,
+          username: `${user?.first_name}  ${user?.last_name}`,
+          phone_number: user?.phone,
+        },
+      },
+    }).unwrap();
+    navigate('OrdersList');
+  };
 
   return (
     <ScrollView
@@ -89,13 +114,7 @@ export const OrderDetailsScreen = () => {
           />
           <View>
             <Text style={styles.label}>Статус</Text>
-            <Text style={[styles.text, {color: statusColor['new']}]}>
-              {order.status === 'new'
-                ? 'Новый'
-                : order.status === 'delivered'
-                ? 'Доставлен'
-                : 'Отменён'}
-            </Text>
+            <OrderStatus status={order.status} />
           </View>
         </View>
         <View style={styles.divider} />
@@ -127,6 +146,21 @@ export const OrderDetailsScreen = () => {
             </View>
           ))}
         </View>
+        {order.status === 'awaiting_courier' && (
+          <View style={styles.buttons}>
+            <TouchableOpacity
+              style={[styles.button, styles.accept]}
+              onPress={() => handleUpdateOrder(parseInt(id), 'prepare')}>
+              <Text style={styles.buttonText}>Принять</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.button, styles.decline]}
+              onPress={() => handleUpdateOrder(parseInt(id), 'canceled')}>
+              <Text style={styles.buttonText}>Отклонить</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -137,6 +171,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#F9FAFB',
     flexGrow: 1,
+    marginBottom: 50,
   },
   card: {
     backgroundColor: '#fff',
@@ -208,5 +243,32 @@ const styles = StyleSheet.create({
   productQty: {
     fontSize: 15,
     color: '#6B7280',
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  button: {
+    flex: 0.48,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  accept: {
+    backgroundColor: '#34C759',
+  },
+  decline: {
+    backgroundColor: '#FF3B30',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+    backgroundColor: '#85E0A3',
   },
 });

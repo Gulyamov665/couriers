@@ -1,140 +1,61 @@
-// import React from 'react';
-// import {View, Text, StyleSheet, TouchableOpacity, Linking} from 'react-native';
-// import {OrdersType} from '../../services/orders/types';
-
-// export type AcceptedCardProps = {
-//   order: OrdersType;
-// };
-
-// export const AcceptedCard: React.FC<AcceptedCardProps> = ({order}) => {
-//   const handleCall = () => {
-//     Linking.openURL(`tel:${998934733223}`);
-//   };
-
-//   const handleOpenMap = () => {
-//     const query = encodeURIComponent(order.location.address);
-//     Linking.openURL(`geo:0,0?q=${query}`);
-//   };
-
-//   return (
-//     <View style={styles.card}>
-//       <View style={styles.header}>
-//         <Text style={styles.orderNumber}>Заказ #{order.id}</Text>
-//         <Text style={styles.statusBadge}>Принят</Text>
-//       </View>
-
-//       <Text style={styles.client}>Клиент: {order.created_by}</Text>
-//       <Text style={styles.address}>{order.location.address}</Text>
-//       <Text style={styles.status}>Статус: В пути</Text>
-
-//       <View style={styles.actions}>
-//         <TouchableOpacity style={styles.actionBtn} onPress={handleCall}>
-//           <Text style={styles.actionText}>📞 Позвонить</Text>
-//         </TouchableOpacity>
-//         <TouchableOpacity style={styles.actionBtn} onPress={handleOpenMap}>
-//           <Text style={styles.actionText}>📍 Маршрут</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   card: {
-//     backgroundColor: '#ffff', // светло-зелёный фон
-//     padding: 16,
-//     borderRadius: 12,
-//     marginBottom: 12,
-//     shadowColor: '#000',
-//     shadowOpacity: 0.05,
-//     shadowRadius: 4,
-//     elevation: 2,
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//   },
-//   orderNumber: {
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//     color: '#212121',
-//   },
-//   statusBadge: {
-//     backgroundColor: '#E8F5E9',
-//     color: '#fff',
-//     borderRadius: 8,
-//     paddingHorizontal: 8,
-//     paddingVertical: 4,
-//     fontSize: 12,
-//     fontWeight: '600',
-//   },
-//   client: {
-//     marginTop: 6,
-//     color: '#333',
-//   },
-//   address: {
-//     color: '#757575',
-//     marginBottom: 4,
-//   },
-//   status: {
-//     color: '#388E3C',
-//     fontWeight: '500',
-//     marginBottom: 10,
-//   },
-//   actions: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//   },
-//   actionBtn: {
-//     backgroundColor: '#C8E6C9',
-//     paddingVertical: 8,
-//     paddingHorizontal: 12,
-//     borderRadius: 8,
-//   },
-//   actionText: {
-//     color: '#2E7D32',
-//     fontWeight: '600',
-//   },
-// });
-import {OrdersType} from '@store/services/orders/types';
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Linking} from 'react-native';
+import {OrdersType} from '@store/services/orders/types';
+import {View, Text, Linking, Platform, Pressable} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {OrderStatus} from 'common/OrderStatuses';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from 'app/navigation/RootNavigator';
 
 export type AcceptedCardProps = {
   order: OrdersType;
 };
 
 export const AcceptedCard: React.FC<AcceptedCardProps> = ({order}) => {
+  const {navigate} =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const handleCall = () => {
-    Linking.openURL(`tel:${+998934733223}`);
+    Linking.openURL(`tel:${'+998934733223'}`);
   };
 
   const handleOpenMap = () => {
-    const query = encodeURIComponent(order.location.address);
-    Linking.openURL(`geo:0,0?q=${query}`);
+    const {lat, long} = order.location;
+
+    const url = Platform.select({
+      ios: `http://maps.apple.com/?ll=${lat},${long}`,
+      android: `geo:${lat},${long}?q=${lat},${long}`,
+    });
+    if (url) Linking.openURL(url);
   };
 
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.orderNumber}>Заказ #{order.id}</Text>
-        <Text style={styles.statusBadge}>Принят</Text>
-      </View>
+    <Pressable
+      onPress={() =>
+        navigate('OrderDetails', {
+          id: String(order.id),
+        })
+      }>
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.orderNumber}>Заказ #{order.id}</Text>
+          <OrderStatus status={order.status} />
+        </View>
 
-      <Text style={styles.client}>Клиент: {order.created_by}</Text>
-      <Text style={styles.address}>{order.location.address}</Text>
-      <Text style={styles.status}>Статус: В пути</Text>
+        <Text style={styles.client}>Клиент: {order.created_by}</Text>
+        <Text style={styles.address}>{order.location.address}</Text>
+        {/* <Text style={styles.status}>Статус: В пути</Text> */}
 
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.actionBtn} onPress={handleCall}>
-          <Text style={styles.actionText}>📞 Позвонить</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionBtn} onPress={handleOpenMap}>
-          <Text style={styles.actionText}>📍 Маршрут</Text>
-        </TouchableOpacity>
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.actionBtn} onPress={handleCall}>
+            <Text style={styles.actionText}>📞 Позвонить</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={handleOpenMap}>
+            <Text style={styles.actionText}>📍 Маршрут</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -161,8 +82,8 @@ const styles = StyleSheet.create({
     color: '#212121',
   },
   statusBadge: {
-    backgroundColor: '#F0F0F0',
-    color: '#4CAF50',
+    color: '#F0F0F0',
+    backgroundColor: '#4CAF50',
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,

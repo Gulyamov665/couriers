@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {TouchableOpacity, ActivityIndicator} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/RootNavigator';
@@ -29,8 +24,12 @@ export const OrderCard = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
-    <TouchableOpacity
-      onPress={() => navigate('OrderDetails', {id: String(order.id)})}>
+    <Pressable
+      onPress={() =>
+        navigate('OrderDetails', {
+          id: String(order.id),
+        })
+      }>
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.orderId}>Заказ #{order.id}</Text>
@@ -40,19 +39,21 @@ export const OrderCard = ({
         </View>
         <View style={styles.infoBox}>
           <MaterialIcons name="person" size={20} />
-          <Text style={styles.customer}> {order.created_by}</Text>
+          <Text style={styles.customer}>{order.created_by}</Text>
         </View>
         <View style={styles.infoBox}>
           <MaterialIcons name="location-on" size={20} />
           <Text style={styles.address}>{order.location.address}</Text>
         </View>
-        <View style={styles.infoBox}>
-          <MaterialIcons name="social-distance" size={20} />
-          <Text style={styles.address}>{order.destination?.distance}</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <MaterialIcons name="access-time" size={20} />
-          <Text style={styles.address}>{order.destination?.duration}</Text>
+        <View style={styles.distance}>
+          <View style={{flexDirection: 'row'}}>
+            <MaterialIcons name="social-distance" size={20} />
+            <Text style={styles.address}>{order.destination?.distance}</Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <MaterialIcons name="access-time" size={20} />
+            <Text style={styles.address}>{order.destination?.duration}</Text>
+          </View>
         </View>
 
         <View style={styles.buttons}>
@@ -78,7 +79,7 @@ export const OrderCard = ({
           </TouchableOpacity>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -112,11 +113,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     marginBottom: 4,
+    marginRight: 10,
+    marginLeft: 5,
   },
   address: {
     fontSize: 14,
     color: '#888',
     marginBottom: 12,
+    marginRight: 10,
+    marginLeft: 5,
   },
   buttons: {
     flexDirection: 'row',
@@ -137,6 +142,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   buttonDisabled: {
     opacity: 0.6,
@@ -147,5 +154,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     overflow: 'hidden',
     marginBottom: 3,
+  },
+  distance: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
 });

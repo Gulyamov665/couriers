@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import {authState} from '../../store/slices/auth';
 import {AcceptedCard} from './orders/AcceptedCard';
 import {ActivityIndicator} from 'react-native-paper';
-import { useGetCourierOrdersQuery } from '@store/services/orders/ordersApi';
+import {useGetCourierOrdersQuery} from '@store/services/orders/ordersApi';
 
 export const HomeScreen = () => {
   const {user} = useSelector(authState);
@@ -27,7 +27,7 @@ export const HomeScreen = () => {
         keyExtractor={item => String(item.id)}
         renderItem={({item}) => <AcceptedCard order={item} />}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={<Text style={styles.empty}>Нет новых заказов</Text>}
+        ListEmptyComponent={<Text style={styles.empty}>Тут пока пусто</Text>}
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
@@ -44,10 +44,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F3F4F6',
-    marginBottom: 70,
   },
   list: {
     padding: 16,
+    paddingBottom: 90,
   },
   empty: {
     textAlign: 'center',

@@ -12,8 +12,7 @@ import {
 export const OrdersScreen = () => {
   const {data, refetch, isLoading, isFetching} = useGetOrdersQuery();
   const {user} = useSelector(authState);
-  const [updateOrder, {isLoading: updateOrderLoader}] =
-    useUpdateOrderMutation();
+  const [updateOrder] = useUpdateOrderMutation();
 
   useSocket(refetch);
 
@@ -39,7 +38,7 @@ export const OrdersScreen = () => {
         renderItem={({item}) => (
           <OrderCard
             order={item}
-            isLoading={updateOrderLoader}
+            isLoading={false}
             onAccept={() => handleUpdateOrder(item.id, 'prepare')}
             onDecline={() => handleUpdateOrder(item.id, 'canceled')}
           />

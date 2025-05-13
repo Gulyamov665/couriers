@@ -12,7 +12,11 @@ const Stack = createNativeStackNavigator<OrdersStackParamList>();
 
 export const NewOrdersStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        gestureEnabled: true, // свайп назад включён
+        animation: 'ios_from_right', // анимация свайпа
+      }}>
       <Stack.Screen
         name="OrdersList"
         component={OrdersScreen}

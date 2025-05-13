@@ -8,17 +8,20 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const OrdersStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        gestureEnabled: true, // свайп назад включён
+        animation: 'slide_from_right', // анимация свайпа
+      }}>
       <Stack.Screen
         name="OrdersList"
         component={HomeScreen}
-        // options={{title: 'Список заказов'}}
         options={{headerShown: false}}
       />
       <Stack.Screen
         name="OrderDetails"
         component={OrderDetailsScreen}
-        // options={{title: 'Детали заказа'}}
+        options={{title: 'Детали заказа'}}
       />
     </Stack.Navigator>
   );
