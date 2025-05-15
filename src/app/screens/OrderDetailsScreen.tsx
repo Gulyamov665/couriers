@@ -16,18 +16,12 @@ import {OrderStatus} from 'common/OrderStatuses';
 
 type OrderDetailsRouteProp = RouteProp<RootStackParamList, 'OrderDetails'>;
 
-const statusColor = {
-  new: '#FFA500',
-  prepare: '#4CAF50',
-  cancelled: '#F44336',
-};
-
 export const OrderDetailsScreen = () => {
   const route = useRoute<OrderDetailsRouteProp>();
   const {id} = route.params;
   const {data: order} = useGetOrderByIdQuery(id);
   const [updateOrder] = useUpdateOrderMutation();
-  const {user} = useSelector(authState);
+  const {userInfo} = useSelector(authState);
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -45,9 +39,9 @@ export const OrderDetailsScreen = () => {
       body: {
         status,
         courier: {
-          id: user?.id,
-          username: `${user?.first_name}  ${user?.last_name}`,
-          phone_number: user?.phone,
+          id: userInfo?.id,
+          username: `${userInfo?.first_name}  ${userInfo?.last_name}`,
+          phone_number: userInfo?.phone,
         },
       },
     }).unwrap();

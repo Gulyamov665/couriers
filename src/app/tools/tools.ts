@@ -41,7 +41,4 @@ export const handleChange = (
   setPhone(digits.startsWith('+') ? digits : '+' + digits);
 };
 
-
-export const getUser =  () =>{
-
-}
+export const getUser = () => {};

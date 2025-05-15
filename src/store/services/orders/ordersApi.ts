@@ -49,6 +49,15 @@ export const ordersApi = createApi({
       query: id => ({
         url: `/orders/getCourierOrders/${id}`,
       }),
+      onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
+        console.log('Query Started getCourierOrders:', arg);
+        try {
+          const result = await queryFulfilled;
+          console.log('Query Success getCourierOrders:', result.data);
+        } catch (error) {
+          console.error('Query Error getCourierOrders:', error);
+        }
+      },
       providesTags: ['orders'],
     }),
     createOrder: build.mutation({

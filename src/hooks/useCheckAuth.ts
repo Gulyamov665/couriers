@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {getAccessToken} from '../app/tools/tools';
 import {useActions} from './useActions';
 import {authState} from '../store/slices/auth';
@@ -8,11 +8,10 @@ import {CustomJwtPayload} from '../store/middlewares/auth';
 import {useLazyMeQuery} from '@store/services/auth/authApi';
 
 export const useCheckAuth = () => {
-  const dispatch = useDispatch();
-  const {setIsAuthenticated, setUser} = useActions();
+  const {setIsAuthenticated, setUser, setUserInfo} = useActions();
   const {isAuthenticated} = useSelector(authState);
   const [isChecking, setIsChecking] = useState(true);
-  const [me, {data}] = useLazyMeQuery();
+  const [me] = useLazyMeQuery();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -21,7 +20,9 @@ export const useCheckAuth = () => {
         setIsAuthenticated(!!token);
         if (token) {
           const tokenDecode = jwtDecode<CustomJwtPayload>(token.access);
-          await me(tokenDecode.user_id);
+          const user = await me(tokenDecode.user_id);
+          if (user.data) setUserInfo(user.data);
+          setUser(tokenDecode);
         }
       } catch (error) {
         console.error('Auth check error:', error);
@@ -32,14 +33,7 @@ export const useCheckAuth = () => {
     };
 
     checkAuth();
-  }, []);
-
-  useEffect(() => {
-    if (data) {
-      console.log(data, 'check');
-      setUser(data);
-    }
-  }, [data]);
+  }, [isAuthenticated]);
 
   return {isAuthenticated, isChecking};
 };

@@ -15,7 +15,7 @@ export const NewOrdersStack = () => {
     <Stack.Navigator
       screenOptions={{
         gestureEnabled: true, // свайп назад включён
-        animation: 'ios_from_right', // анимация свайпа
+        animation: 'slide_from_right', // анимация свайпа
       }}>
       <Stack.Screen
         name="OrdersList"

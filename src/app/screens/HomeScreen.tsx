@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, StyleSheet, FlatList, RefreshControl} from 'react-native';
-
 import {useSelector} from 'react-redux';
 import {authState} from '../../store/slices/auth';
 import {AcceptedCard} from './orders/AcceptedCard';
@@ -9,9 +8,12 @@ import {useGetCourierOrdersQuery} from '@store/services/orders/ordersApi';
 
 export const HomeScreen = () => {
   const {user} = useSelector(authState);
-  const {data, isLoading, refetch} = useGetCourierOrdersQuery(user?.id ?? 0, {
-    skip: !user?.id,
-  });
+
+  const skip = {skip: !user?.user_id};
+  const {data, isLoading, refetch} = useGetCourierOrdersQuery(
+    user?.user_id ?? 0,
+    skip,
+  );
 
   if (!data)
     return (
@@ -35,6 +37,7 @@ export const HomeScreen = () => {
             colors={['#FFA500']}
           />
         }
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

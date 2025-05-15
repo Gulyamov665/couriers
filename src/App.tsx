@@ -5,6 +5,8 @@ import {PaperProvider} from 'react-native-paper';
 import {RootNavigator} from './app/navigation/RootNavigator';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import FloatingFCMToggle from 'app/screens/header/components/FloatingFCMToggle';
 
 export default function App() {
   return (
@@ -12,11 +14,14 @@ export default function App() {
       <SafeAreaProvider>
         <SafeAreaView style={{flex: 1}}>
           <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
-          <Provider store={store}>
-            <PaperProvider>
-              <RootNavigator />
-            </PaperProvider>
-          </Provider>
+          <GestureHandlerRootView style={{flex: 1}}>
+            <Provider store={store}>
+              <PaperProvider>
+                <RootNavigator />
+                <FloatingFCMToggle />
+              </PaperProvider>
+            </Provider>
+          </GestureHandlerRootView>
         </SafeAreaView>
       </SafeAreaProvider>
     </React.StrictMode>

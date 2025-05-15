@@ -4,14 +4,12 @@ import {OrderCard} from '../../components/OrderCard';
 import {useSocket} from '../../../hooks/useSocket';
 import {useSelector} from 'react-redux';
 import {authState} from '../../../store/slices/auth';
-import {
-  useGetOrdersQuery,
-  useUpdateOrderMutation,
-} from '@store/services/orders/ordersApi';
+import {useGetOrdersQuery} from '@store/services/orders/ordersApi';
+import {useUpdateOrderMutation} from '@store/services/orders/ordersApi';
 
 export const OrdersScreen = () => {
   const {data, refetch, isLoading, isFetching} = useGetOrdersQuery();
-  const {user} = useSelector(authState);
+  const {userInfo} = useSelector(authState);
   const [updateOrder] = useUpdateOrderMutation();
 
   useSocket(refetch);
@@ -22,9 +20,9 @@ export const OrdersScreen = () => {
       body: {
         status,
         courier: {
-          id: user?.id,
-          username: `${user?.first_name}  ${user?.last_name}`,
-          phone_number: user?.phone,
+          id: userInfo?.id,
+          username: `${userInfo?.first_name}  ${userInfo?.last_name}`,
+          phone_number: userInfo?.phone,
         },
       },
     }).unwrap();
@@ -54,6 +52,7 @@ export const OrdersScreen = () => {
             colors={['#FFA500']}
           />
         }
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
