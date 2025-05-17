@@ -54,20 +54,20 @@ export const userAuth = createApi({
       }),
     }),
     setFcmToken: build.mutation({
-      query: ({body, user}) => ({
-        url: `/v1/auth/user/channel/${user.id}`,
+      query: ({id, fcm_token}) => ({
+        url: `/v1/auth/user/channel/${id}`,
         method: 'PATCH',
-        body,
+        body: {fcm_token},
       }),
-      // onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
-      //   console.log('setFcmToken Started:', arg);
-      //   try {
-      //     const result = await queryFulfilled;
-      //     console.log('setFcmToken Success:', result.data);
-      //   } catch (error) {
-      //     console.error('setFcmToken Error:', error);
-      //   }
-      // },
+      onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
+        console.log('setFcmToken Started:', arg);
+        try {
+          const result = await queryFulfilled;
+          console.log('setFcmToken Success:', result.data);
+        } catch (error) {
+          console.error('setFcmToken Error:', error);
+        }
+      },
     }),
   }),
 });

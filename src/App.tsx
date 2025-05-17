@@ -10,20 +10,18 @@ import FloatingFCMToggle from 'app/screens/header/components/FloatingFCMToggle';
 
 export default function App() {
   return (
-    <React.StrictMode>
-      <SafeAreaProvider>
-        <SafeAreaView style={{flex: 1}}>
-          <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
-          <GestureHandlerRootView style={{flex: 1}}>
-            <Provider store={store}>
-              <PaperProvider>
-                <RootNavigator />
-                <FloatingFCMToggle />
-              </PaperProvider>
-            </Provider>
-          </GestureHandlerRootView>
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </React.StrictMode>
+    <SafeAreaProvider>
+      <SafeAreaView style={{flex: 1}}>
+        <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+        <GestureHandlerRootView style={{flex: 1}}>
+          <Provider store={store}>
+            <PaperProvider>
+              <RootNavigator />
+              <FloatingFCMToggle />
+            </PaperProvider>
+          </Provider>
+        </GestureHandlerRootView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
