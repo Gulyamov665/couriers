@@ -1,8 +1,8 @@
-import {userAuth} from '../services/auth/authApi';
-import {setIsAuthenticated, setUser} from '../slices/auth';
-import {jwtDecode, JwtPayload} from 'jwt-decode';
-import listenerMiddleware from './listenerMiddleware';
-import * as Keychain from 'react-native-keychain'; // Импортируем Keychain
+import { userAuth } from "../services/auth/authApi";
+import { setIsAuthenticated, setUser } from "../slices/auth";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import listenerMiddleware from "./listenerMiddleware";
+import * as Keychain from "react-native-keychain"; // Импортируем Keychain
 
 export interface CustomJwtPayload extends JwtPayload {
   token_type: string;
@@ -20,18 +20,15 @@ export interface CustomJwtPayload extends JwtPayload {
 listenerMiddleware.startListening({
   matcher: userAuth.endpoints.auth.matchFulfilled,
   effect: async (action, listenerApi) => {
-    const {access, refresh} = action.payload;
+    const { access, refresh } = action.payload;
     try {
       // Сохраняем токены в Keychain
-      await Keychain.setGenericPassword(
-        'auth',
-        JSON.stringify({access, refresh}),
-      );
+      await Keychain.setGenericPassword("auth", JSON.stringify({ access, refresh }));
       const user = jwtDecode<CustomJwtPayload>(access);
       listenerApi.dispatch(setIsAuthenticated(!!user));
       listenerApi.dispatch(setUser(user));
     } catch (error) {
-      console.error('Ошибка при сохранении токенов в Keychain', error);
+      console.error("Ошибка при сохранении токенов в Keychain", error);
     }
   },
 });

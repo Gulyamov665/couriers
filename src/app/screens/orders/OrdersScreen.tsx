@@ -1,15 +1,15 @@
-import React from 'react';
-import {FlatList, View, Text, StyleSheet, RefreshControl} from 'react-native';
-import {OrderCard} from '../../components/OrderCard';
-import {useSocket} from '../../../hooks/useSocket';
-import {useSelector} from 'react-redux';
-import {authState} from '../../../store/slices/auth';
-import {useGetOrdersQuery} from '@store/services/orders/ordersApi';
-import {useUpdateOrderMutation} from '@store/services/orders/ordersApi';
+import React from "react";
+import { FlatList, View, Text, StyleSheet, RefreshControl } from "react-native";
+import { OrderCard } from "../../components/OrderCard";
+import { useSocket } from "../../../hooks/useSocket";
+import { useSelector } from "react-redux";
+import { authState } from "../../../store/slices/auth";
+import { useGetOrdersQuery } from "@store/services/orders/ordersApi";
+import { useUpdateOrderMutation } from "@store/services/orders/ordersApi";
 
 export const OrdersScreen = () => {
-  const {data, refetch, isLoading, isFetching} = useGetOrdersQuery();
-  const {userInfo} = useSelector(authState);
+  const { data, refetch, isLoading, isFetching } = useGetOrdersQuery();
+  const { userInfo } = useSelector(authState);
   const [updateOrder] = useUpdateOrderMutation();
 
   useSocket(refetch);
@@ -32,25 +32,19 @@ export const OrdersScreen = () => {
     <View style={styles.container}>
       <FlatList
         data={data}
-        keyExtractor={item => String(item.id)}
-        renderItem={({item}) => (
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => (
           <OrderCard
             order={item}
             isLoading={false}
-            onAccept={() => handleUpdateOrder(item.id, 'prepare')}
-            onDecline={() => handleUpdateOrder(item.id, 'canceled')}
+            onAccept={() => handleUpdateOrder(item.id, "prepare")}
+            onDecline={() => handleUpdateOrder(item.id, "canceled")}
           />
         )}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={
-          <Text style={styles.empty}>Пока нет новых заказов</Text>
-        }
+        ListEmptyComponent={<Text style={styles.empty}>Пока нет новых заказов</Text>}
         refreshControl={
-          <RefreshControl
-            refreshing={isFetching || isLoading}
-            onRefresh={refetch}
-            colors={['#FFA500']}
-          />
+          <RefreshControl refreshing={isFetching || isLoading} onRefresh={refetch} colors={["#FFA500"]} />
         }
         showsVerticalScrollIndicator={false}
       />
@@ -61,28 +55,28 @@ export const OrdersScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: "#F3F4F6",
     marginBottom: 70,
   },
   list: {
     padding: 16,
   },
   empty: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 40,
-    color: '#888',
+    color: "#888",
     fontSize: 16,
   },
   buttonWrapper: {
     padding: 16,
     borderTopWidth: 1,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#FFF',
+    borderColor: "#E5E7EB",
+    backgroundColor: "#FFF",
     borderTopRightRadius: 20,
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

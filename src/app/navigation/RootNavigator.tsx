@@ -38,7 +38,6 @@ export const RootNavigator = () => {
     });
   };
   useEffect(() => {
-    console.log(isChecking, "ischecking");
     if (fcmToken && user?.user_id) setToken();
   }, [fcmToken, isAuthenticated, user]);
 

@@ -1,6 +1,6 @@
-import {createApi} from '@reduxjs/toolkit/query/react';
-import {UserInfoType} from '../orders/types';
-import {baseInterceptor, baseQuery} from '../config/base';
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { UserInfoType } from "../orders/types";
+import { baseInterceptor } from "../config/base";
 
 export interface IsUserType {
   token_type: string;
@@ -15,13 +15,13 @@ export interface IsUserType {
 }
 
 export const userAuth = createApi({
-  reducerPath: 'userAuth',
+  reducerPath: "userAuth",
   baseQuery: baseInterceptor,
-  endpoints: build => ({
+  endpoints: (build) => ({
     auth: build.mutation({
-      query: body => ({
-        url: 'v1/auth/native/login',
-        method: 'POST',
+      query: (body) => ({
+        url: "v1/auth/native/login",
+        method: "POST",
         body,
       }),
       // onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
@@ -35,37 +35,37 @@ export const userAuth = createApi({
       // },
     }),
     me: build.query<UserInfoType, number>({
-      query: id => `v1/auth/user/${id}`,
-      onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
-        console.log('me Started:', arg);
+      query: (id) => `v1/auth/user/${id}`,
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        console.log("me Started:", arg);
         try {
           const result = await queryFulfilled;
-          console.log('me Success:', result.data);
+          console.log("me Success:", result.data);
         } catch (error) {
-          console.error('me Error:', error);
+          console.error("me Error:", error);
         }
       },
     }),
     updateToken: build.mutation({
-      query: ({id, body}) => ({
+      query: ({ id, body }) => ({
         url: `/v1/auth/user/channel/${id}`,
-        method: 'PUT',
+        method: "PUT",
         body,
       }),
     }),
     setFcmToken: build.mutation({
-      query: ({id, fcm_token}) => ({
+      query: ({ id, fcm_token }) => ({
         url: `/v1/auth/user/channel/${id}`,
-        method: 'PATCH',
-        body: {fcm_token},
+        method: "PATCH",
+        body: { fcm_token },
       }),
-      onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
-        console.log('setFcmToken Started:', arg);
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        console.log("setFcmToken Started:", arg);
         try {
           const result = await queryFulfilled;
-          console.log('setFcmToken Success:', result.data);
+          console.log("setFcmToken Success:", result.data);
         } catch (error) {
-          console.error('setFcmToken Error:', error);
+          console.error("setFcmToken Error:", error);
         }
       },
     }),
@@ -74,9 +74,4 @@ export const userAuth = createApi({
 
 export type meQueryType = ReturnType<typeof useMeQuery>;
 
-export const {
-  useAuthMutation,
-  useMeQuery,
-  useLazyMeQuery,
-  useSetFcmTokenMutation,
-} = userAuth;
+export const { useAuthMutation, useMeQuery, useLazyMeQuery, useSetFcmTokenMutation } = userAuth;
