@@ -1,11 +1,11 @@
-import notifee, {AndroidImportance} from '@notifee/react-native';
-import {PermissionsAndroid} from 'react-native';
+import notifee, { AndroidImportance } from "@notifee/react-native";
+import { PermissionsAndroid } from "react-native";
 
 const createNotificationChannel = async () => {
   await notifee.createChannel({
-    id: 'aurora',
-    name: 'aurora',
-    sound: 'sound',
+    id: "aurora",
+    name: "aurora",
+    sound: "sound",
     importance: AndroidImportance.HIGH,
     vibration: true,
     vibrationPattern: [300, 500],
@@ -13,16 +13,14 @@ const createNotificationChannel = async () => {
 };
 
 const requestUserPermission = async () => {
-  const granted = await PermissionsAndroid.request(
-    PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-  );
+  const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
   if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-    console.log('You can use the notifications');
+    console.log("You can use the notifications");
     await createNotificationChannel();
   } else {
-    console.log('Notification permission denied');
+    console.log("Notification permission denied");
   }
 };
 
-export {createNotificationChannel, requestUserPermission};
+export { createNotificationChannel, requestUserPermission };

@@ -1,13 +1,13 @@
 import React from "react";
 import { FlatList, View, Text, StyleSheet, RefreshControl } from "react-native";
-import { OrderCard } from "../../components/OrderCard";
-import { useSocket } from "../../../hooks/useSocket";
 import { useSelector } from "react-redux";
-import { authState } from "../../../store/slices/auth";
 import { useGetOrdersQuery } from "@store/services/orders/ordersApi";
 import { useUpdateOrderMutation } from "@store/services/orders/ordersApi";
+import { authState } from "@store/slices/auth";
+import { useSocket } from "hooks/useSocket";
+import { OrderCard } from "app/components/OrderCard";
 
-export const OrdersScreen = () => {
+export const OrdersNew = () => {
   const { data, refetch, isLoading, isFetching } = useGetOrdersQuery();
   const { userInfo } = useSelector(authState);
   const [updateOrder] = useUpdateOrderMutation();

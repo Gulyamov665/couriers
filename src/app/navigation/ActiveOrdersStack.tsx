@@ -1,16 +1,12 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { OrdersNew } from "app/features/orders/screens/OrdersNew";
+import { RootStackParamList } from "./RootNavigator";
+import { OrdersActive } from "../features/orders/screens/OrdersActive";
 import { OrderDetailsScreen } from "app/features/orders/components/OrderDetailsScreen";
 
-export type OrdersStackParamList = {
-  OrdersList: undefined;
-  OrderDetails: { id: string };
-};
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const Stack = createNativeStackNavigator<OrdersStackParamList>();
-
-export const NewOrdersStack = () => {
+export const ActiveOrdersStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -18,7 +14,7 @@ export const NewOrdersStack = () => {
         animation: "slide_from_right", // анимация свайпа
       }}
     >
-      <Stack.Screen name="OrdersList" component={OrdersNew} options={{ title: "Новые заказы", headerShown: false }} />
+      <Stack.Screen name="OrdersList" component={OrdersActive} options={{ headerShown: false }} />
       <Stack.Screen name="OrderDetails" component={OrderDetailsScreen} options={{ title: "Детали заказа" }} />
     </Stack.Navigator>
   );

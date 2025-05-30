@@ -1,21 +1,23 @@
-import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import React from "react";
+import { StyleSheet, Text } from "react-native";
 
 interface OrderStatusProps {
   status: string;
 }
 
-export const OrderStatus: React.FC<OrderStatusProps> = ({status}) => {
+export const OrderStatus: React.FC<OrderStatusProps> = ({ status }) => {
   switch (status) {
-    case 'new':
+    case "new":
       return <Text style={styles.statusBadgeNew}>Новый</Text>;
-    case 'completed':
+    case "completed":
       return <Text style={styles.statusBadgeCompleted}>Готово</Text>;
-    case 'awaiting_courier':
+    case "on_the_way":
+      return <Text style={styles.statusBadgeCompleted}>Доставляется</Text>;
+    case "awaiting_courier":
       return <Text style={styles.statusBadgeWait}>Ожидание курьера</Text>;
-    case 'canceled':
+    case "canceled":
       return <Text style={styles.statusBadgeCanceled}>Отменен</Text>;
-    case 'prepare':
+    case "prepare":
       return <Text style={styles.statusBadgeWait}>Готовиться</Text>;
     default:
       return <Text style={styles.statusBadgeNew}>"Неизвестно"</Text>;
@@ -24,39 +26,39 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({status}) => {
 
 const styles = StyleSheet.create({
   statusBadgeNew: {
-    color: '#F0F0F0',
-    backgroundColor: '#4CAF50',
+    color: "#F0F0F0",
+    backgroundColor: "#4CAF50",
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   statusBadgeCompleted: {
-    color: '#ffff',
-    backgroundColor: 'black',
+    color: "#ffff",
+    backgroundColor: "blueviolet",
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   statusBadgeWait: {
-    color: '#ffff',
-    backgroundColor: '#FFA500',
+    color: "#ffff",
+    backgroundColor: "#FFA500",
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   statusBadgeCanceled: {
-    color: '#ffff',
-    backgroundColor: 'red',
+    color: "#ffff",
+    backgroundColor: "red",
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });

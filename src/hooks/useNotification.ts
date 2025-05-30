@@ -1,14 +1,14 @@
-import {useEffect, useState} from 'react';
-import {getApp} from '@react-native-firebase/app';
-import {getToken, onMessage} from '@react-native-firebase/messaging';
-import {getMessaging} from '@react-native-firebase/messaging';
-import notifee, {AndroidImportance} from '@notifee/react-native';
-import {useActions} from './useActions';
-import {requestUserPermission} from '../app/config/notification';
+import { useEffect, useState } from "react";
+import { getApp } from "@react-native-firebase/app";
+import { getToken, onMessage } from "@react-native-firebase/messaging";
+import { getMessaging } from "@react-native-firebase/messaging";
+import notifee, { AndroidImportance } from "@notifee/react-native";
+import { useActions } from "./useActions";
+import { requestUserPermission } from "../app/config/notification";
 
 export const useNotification = (): string | null => {
   const [token, setToken] = useState<string | null>(null);
-  const {setFCMToken} = useActions();
+  const { setFCMToken } = useActions();
   const app = getApp();
   const messaging = getMessaging(app);
 
@@ -18,19 +18,19 @@ export const useNotification = (): string | null => {
       await getFCMToken();
 
       // 👇 Теперь передаём messaging как первый аргумент
-      const unsubscribe = onMessage(messaging, async remoteMessage => {
-        console.log('Foreground message received', remoteMessage);
+      const unsubscribe = onMessage(messaging, async (remoteMessage) => {
+        console.log("Foreground message received", remoteMessage);
 
         await notifee.displayNotification({
           title: remoteMessage.notification?.title,
           body: remoteMessage.notification?.body,
           android: {
-            channelId: 'aurora',
-            sound: 'sound',
+            channelId: "aurora",
+            sound: "sound",
             importance: AndroidImportance.HIGH,
             vibrationPattern: [300, 500],
             pressAction: {
-              id: 'default',
+              id: "default",
             },
           },
         });
@@ -43,8 +43,8 @@ export const useNotification = (): string | null => {
 
     // Очистка при размонтировании
     return () => {
-      unsubscribePromise.then(unsub => {
-        if (typeof unsub === 'function') unsub();
+      unsubscribePromise.then((unsub) => {
+        if (typeof unsub === "function") unsub();
       });
     };
   }, []);
@@ -56,7 +56,7 @@ export const useNotification = (): string | null => {
       setFCMToken(fcmToken);
       setToken(fcmToken);
     } catch (error) {
-      console.log('Error getting token', error);
+      console.log("Error getting token", error);
     }
   };
 

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BottomTabs from "./BottomTabs";
-import { LoginScreen } from "../screens/login/LoginScreen";
+import { LoginScreen } from "../features/login/LoginScreen";
 import { ErrorBoundary } from "../config/ErrorBoundary";
 import { useCheckAuth } from "../../hooks/useCheckAuth";
 import { Loader } from "../components/Loader";

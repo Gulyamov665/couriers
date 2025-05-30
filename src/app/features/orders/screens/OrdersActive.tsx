@@ -1,16 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet, FlatList, RefreshControl } from "react-native";
 import { useSelector } from "react-redux";
-import { authState } from "../../store/slices/auth";
-import { AcceptedCard } from "./orders/AcceptedCard";
+import { authState } from "../../../../store/slices/auth";
+import { AcceptedCard } from "../components/AcceptedCard";
 import { ActivityIndicator } from "react-native-paper";
-import { useGetCourierOrdersQuery } from "@store/services/orders/ordersApi";
+import { useGetCourierOrdersQuery, useUpdateOrderMutation } from "@store/services/orders/ordersApi";
 
-export const HomeScreen = () => {
+export const OrdersActive = () => {
   const { user } = useSelector(authState);
-
   const skip = { skip: !user?.user_id };
   const { data, isLoading, refetch } = useGetCourierOrdersQuery(user?.user_id ?? 0, skip);
+  const [updateOrder] = useUpdateOrderMutation();
 
   if (!data)
     return (
@@ -19,14 +19,25 @@ export const HomeScreen = () => {
       </View>
     );
 
+  const handleUpdateOrder = async (id: number, status: string) => {
+    await updateOrder({
+      id,
+      body: {
+        status,
+      },
+    }).unwrap();
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={data}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <AcceptedCard order={item} />}
+        renderItem={({ item }) => (
+          <AcceptedCard order={item} onTheWay={() => handleUpdateOrder(item.id, "on_the_way")} />
+        )}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={<Text style={styles.empty}>Тут пока пусто</Text>}
+        ListEmptyComponent={<Text style={styles.empty}>Нет активных заказов</Text>}
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} colors={["#FFA500"]} />}
         showsVerticalScrollIndicator={false}
       />

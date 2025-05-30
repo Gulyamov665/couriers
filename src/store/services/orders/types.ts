@@ -44,6 +44,7 @@ export type OrdersType = {
   long: string;
   user_id: number;
   restaurant: RestaurantOrderType;
+  user_phone_number: string;
   products: OrderProduct[];
   status: string;
   location: UserLocationType;
