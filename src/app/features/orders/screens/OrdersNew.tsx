@@ -8,8 +8,9 @@ import { useSocket } from "hooks/useSocket";
 import { OrderCard } from "app/components/OrderCard";
 
 export const OrdersNew = () => {
-  const { data, refetch, isLoading, isFetching } = useGetOrdersQuery();
   const { userInfo } = useSelector(authState);
+  const skip = { skip: !userInfo?.id };
+  const { data, refetch, isLoading, isFetching } = useGetOrdersQuery({ id: String(userInfo?.id) }, skip);
   const [updateOrder] = useUpdateOrderMutation();
 
   useSocket(refetch);

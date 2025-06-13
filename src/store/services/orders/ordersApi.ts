@@ -8,18 +8,18 @@ export const ordersApi = createApi({
   baseQuery: ordersQuery,
 
   endpoints: (build) => ({
-    getOrders: build.query<OrdersType[], void>({
-      query: () => ({
+    getOrders: build.query<OrdersType[], { id: string }>({
+      query: ({ id }) => ({
         url: `/orders/status`,
-        params: { status: "awaiting_courier" },
+        params: { status: "awaiting_courier", id },
       }),
-      // onQueryStarted: async (arg, {dispatch, queryFulfilled}) => {
-      //   console.log('Query Started Orders:', arg);
+      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+      //   console.log("Query Started Orders get couries:", arg);
       //   try {
       //     const result = await queryFulfilled;
-      //     console.log('Query Success Orders:', result.data);
+      //     console.log("Query Success Orders get couries:", result.data);
       //   } catch (error) {
-      //     console.error('Query Error Orders:', error);
+      //     console.error("Query Error Orders get couries:", error);
       //   }
       // },
       providesTags: ["orders"],
@@ -30,15 +30,15 @@ export const ordersApi = createApi({
         method: "PUT",
         body,
       }),
-      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-        console.log("Query Started OrdersUpdate:", arg);
-        try {
-          const result = await queryFulfilled;
-          console.log("Query Success OrdersUpdate:", result.data);
-        } catch (error) {
-          console.error("Query Error OrdersUpdate:", error);
-        }
-      },
+      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+      //   console.log("Query Started OrdersUpdate:", arg);
+      //   try {
+      //     const result = await queryFulfilled;
+      //     console.log("Query Success OrdersUpdate:", result.data);
+      //   } catch (error) {
+      //     console.error("Query Error OrdersUpdate:", error);
+      //   }
+      // },
       invalidatesTags: ["orders"],
     }),
 
@@ -58,15 +58,15 @@ export const ordersApi = createApi({
       query: (id) => ({
         url: `/orders/getCourierOrders/${id}`,
       }),
-      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-        console.log("Query Started getCourierOrders:", arg);
-        try {
-          const result = await queryFulfilled;
-          console.log("Query Success getCourierOrders:", result.data);
-        } catch (error) {
-          console.error("Query Error getCourierOrders:", error);
-        }
-      },
+      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+      //   console.log("Query Started getCourierOrders:", arg);
+      //   try {
+      //     const result = await queryFulfilled;
+      //     console.log("Query Success getCourierOrders:", result.data);
+      //   } catch (error) {
+      //     console.error("Query Error getCourierOrders:", error);
+      //   }
+      // },
       providesTags: ["orders"],
     }),
     //

@@ -36,15 +36,15 @@ export const userAuth = createApi({
     }),
     me: build.query<UserInfoType, number>({
       query: (id) => `v1/auth/user/${id}`,
-      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-        console.log("me Started:", arg);
-        try {
-          const result = await queryFulfilled;
-          console.log("me Success:", result.data);
-        } catch (error) {
-          console.error("me Error:", error);
-        }
-      },
+      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+      //   console.log("me Started:", arg);
+      //   try {
+      //     const result = await queryFulfilled;
+      //     console.log("me Success:", result.data);
+      //   } catch (error) {
+      //     console.error("me Error:", error);
+      //   }
+      // },
     }),
     updateToken: build.mutation({
       query: ({ id, body }) => ({
@@ -59,15 +59,15 @@ export const userAuth = createApi({
         method: "PATCH",
         body: { fcm_token },
       }),
-      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-        console.log("setFcmToken Started:", arg);
-        try {
-          const result = await queryFulfilled;
-          console.log("setFcmToken Success:", result.data);
-        } catch (error) {
-          console.error("setFcmToken Error:", error);
-        }
-      },
+      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+      //   console.log("setFcmToken Started:", arg);
+      //   try {
+      //     const result = await queryFulfilled;
+      //     console.log("setFcmToken Success:", result.data);
+      //   } catch (error) {
+      //     console.error("setFcmToken Error:", error);
+      //   }
+      // },
     }),
   }),
 });
