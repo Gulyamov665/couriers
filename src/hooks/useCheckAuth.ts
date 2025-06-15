@@ -21,7 +21,6 @@ export const useCheckAuth = () => {
         if (token) {
           const tokenDecode = jwtDecode<CustomJwtPayload>(token.access);
           const user = await me(tokenDecode.user_id);
-          console.log(user, 'user');
           if (user.data) setUserInfo(user.data);
           setUser(tokenDecode);
         }

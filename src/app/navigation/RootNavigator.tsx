@@ -8,8 +8,8 @@ import { useCheckAuth } from "../../hooks/useCheckAuth";
 import { Loader } from "../components/Loader";
 import { useSelector } from "react-redux";
 import { authState } from "../../store/slices/auth";
-import { useNotification } from "../../hooks/useNotification";
 import { useSetFcmTokenMutation } from "@store/services/auth/authApi";
+import { useNotifications } from "hooks/useNotification";
 
 export type RootStackParamList = {
   Main: undefined;
@@ -26,7 +26,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator = () => {
-  useNotification();
+  useNotifications();
   const { isAuthenticated, isChecking } = useCheckAuth();
   const { fcmToken, user } = useSelector(authState);
   const [setTokenFCM] = useSetFcmTokenMutation();

@@ -1,11 +1,8 @@
 import { OrdersType } from "@store/services/orders/types";
-import { authState } from "@store/slices/auth";
 import { useCallback, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
 import io from "socket.io-client";
 
 export const useSocket = (updateOrders: () => void) => {
-  const { userInfo } = useSelector(authState);
   const socketRef = useRef<any>(null);
 
   useEffect(() => {

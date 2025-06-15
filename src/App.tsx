@@ -6,9 +6,11 @@ import { RootNavigator } from "./app/navigation/RootNavigator";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-// import FloatingFCMToggle from "app/features/header/components/FloatingFCMToggle";
+import { useForegroundSocketService } from "hooks/useForegroundSocketService";
 
 export default function App() {
+  useForegroundSocketService();
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>

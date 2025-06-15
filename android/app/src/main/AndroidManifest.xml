@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
       android:name=".MainApplication"
@@ -23,7 +25,20 @@
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+            <category android:name="android.intent.category.APP_MESSAGING" />
         </intent-filter>
       </activity>
+      <receiver 
+      android:name=".SocketBroadcastReceiver"
+      android:exported="true">
+        <intent-filter>
+          <action android:name="OrderUpdate" />
+        </intent-filter>
+      </receiver>
+      <service
+      android:name=".SocketService"
+      android:foregroundServiceType="dataSync"
+      android:enabled="true"
+      android:exported="false" />
     </application>
 </manifest>
