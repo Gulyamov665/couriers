@@ -1,20 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  StyleSheet,
-  Animated,
-} from 'react-native';
-import {formatPhoneNumber, handleChange} from '../../tools/tools';
-import {useAuthMutation} from '@store/services/auth/authApi';
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet, Animated } from "react-native";
+import { formatPhoneNumber, handleChange } from "../../tools/tools";
+import { useAuthMutation } from "@store/services/auth/authApi";
+import { useTheme } from "hooks/useTheme";
 
 export const LoginScreen = () => {
-  const [phone, setPhone] = useState('');
-  const [auth, {isLoading, error}] = useAuthMutation();
-  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState("");
+  const [auth, { isLoading, error }] = useAuthMutation();
+  const [password, setPassword] = useState("");
+  const { theme } = useTheme();
   const errorAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -34,12 +28,12 @@ export const LoginScreen = () => {
   }, [error, phone.length]);
 
   const handleLogin = async () => {
-    await auth({phone, password}).unwrap();
+    await auth({ phone, password }).unwrap();
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Вход</Text>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Text style={[styles.title, { color: theme.colors.onBackground }]}>Вход</Text>
 
       <TextInput
         style={styles.input}
@@ -47,7 +41,7 @@ export const LoginScreen = () => {
         placeholder="Номер телефона"
         placeholderTextColor="#888"
         value={formatPhoneNumber(phone)}
-        onChangeText={num => handleChange(num, setPhone)}
+        onChangeText={(num) => handleChange(num, setPhone)}
         keyboardType="phone-pad"
         autoCapitalize="none"
         maxLength={16}
@@ -63,23 +57,12 @@ export const LoginScreen = () => {
         autoCapitalize="none"
       />
 
-      <Animated.View style={{opacity: errorAnim, minHeight: 22}}>
-        {error ? (
-          <Text style={styles.errorText}>
-            Неверный номер телефона или пароль
-          </Text>
-        ) : null}
+      <Animated.View style={{ opacity: errorAnim, minHeight: 22 }}>
+        {error ? <Text style={styles.errorText}>Неверный номер телефона или пароль</Text> : null}
       </Animated.View>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleLogin}
-        disabled={isLoading}>
-        {isLoading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Войти</Text>
-        )}
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
+        {isLoading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Войти</Text>}
       </TouchableOpacity>
     </View>
   );
@@ -88,45 +71,45 @@ export const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
-    justifyContent: 'center',
+    backgroundColor: "#f3f4f6",
+    justifyContent: "center",
     paddingHorizontal: 30,
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 40,
-    textAlign: 'center',
-    color: '#111827',
+    textAlign: "center",
+    color: "#111827",
   },
   input: {
     height: 50,
-    borderColor: '#d1d5db',
+    borderColor: "#d1d5db",
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
     marginBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     fontSize: 16,
-    color: '#111',
+    color: "#111",
   },
   button: {
     height: 50,
-    backgroundColor: '#2563eb',
+    backgroundColor: "#2563eb",
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   errorText: {
-    color: '#FF3B30',
+    color: "#FF3B30",
     fontSize: 15,
     marginBottom: 3,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

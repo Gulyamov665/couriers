@@ -1,19 +1,18 @@
-// src/components/CustomHeader.tsx
 import React from "react";
 import { View, Text, TouchableOpacity, Platform, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useTheme } from "hooks/useTheme";
-import IonIcon from "react-native-vector-icons/Ionicons";
 import type { TextStyle } from "react-native";
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 export const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation, route, options, back }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
-  const BASE_HEIGHT = 56; // стандартная высота хедера без статус-бара
+  //   const BASE_HEIGHT = 36; // 56 стандартная высота хедера без статус-бара
 
   // на Android добавляем StatusBar.currentHeight, на iOS — только insets.top
-  const statusBarHeight = Platform.OS === "android" ? StatusBar.currentHeight ?? insets.top : insets.top;
+  //   const statusBarHeight = Platform.OS === "android" ? StatusBar.currentHeight ?? insets.top : insets.top;
 
   const title = options.title ?? route.name;
 
@@ -21,8 +20,8 @@ export const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation, rou
   return (
     <View
       style={{
-        paddingTop: statusBarHeight,
-        height: statusBarHeight + BASE_HEIGHT,
+        paddingTop: 10,
+        // height: statusBarHeight ,
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: theme.colors.background,

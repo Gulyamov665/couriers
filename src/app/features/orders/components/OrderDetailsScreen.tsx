@@ -50,92 +50,94 @@ export const OrderDetailsScreen = () => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={[styles.card, { backgroundColor: theme.colors.onPrimary }]}>
-        <Text style={[styles.title, { color: theme.colors.onBackground }]}>Заказ №{order.id}</Text>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <ScrollView
+        contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={[styles.card, { backgroundColor: theme.colors.onPrimary }]}>
+          <Text style={[styles.title, { color: theme.colors.onBackground }]}>Заказ №{order.id}</Text>
 
-        <View style={styles.row}>
-          <FontAwesome5 name="user" size={18} color={theme.colors.onBackground} style={styles.icon} />
-          <View>
-            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Клиент</Text>
-            <Text style={[styles.text, { color: theme.colors.onBackground }]}>{order.created_by}</Text>
-          </View>
-        </View>
-        <View style={styles.divider} />
-
-        <View style={styles.row}>
-          <Entypo name="location-pin" size={20} style={styles.icon} color={theme.colors.onBackground} />
-          <View>
-            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Адрес доставки</Text>
-            <Text style={[styles.text, { color: theme.colors.onBackground }]}>Улица Мустакиллик</Text>
-          </View>
-        </View>
-        <View style={styles.divider} />
-
-        <View style={styles.row}>
-          <FontAwesome5 name="money-bill-wave" size={18} color={theme.colors.onBackground} style={styles.icon} />
-          <View>
-            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Сумма</Text>
-            <Text style={[styles.text, styles.price, , { color: theme.colors.onBackground }]}>
-              {order.total_price} ₽
-            </Text>
-          </View>
-        </View>
-        <View style={styles.divider} />
-
-        <View style={styles.row}>
-          <MaterialIcons name="local-shipping" size={20} color={theme.colors.onBackground} style={styles.icon} />
-          <View>
-            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Статус</Text>
-            <OrderStatus status={order.status} />
-          </View>
-        </View>
-        <View style={styles.divider} />
-
-        <View style={styles.row}>
-          <MaterialIcons name="event" size={20} color={theme.colors.onBackground} style={styles.icon} />
-          <View>
-            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Дата заказа</Text>
-            <Text style={[styles.text, { color: theme.colors.onBackground }]}>
-              {new Date(order.created_at).toLocaleString()}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.divider} />
-
-        <View>
-          <Text style={[styles.label, { color: theme.colors.onBackground }]}>Состав заказа</Text>
-          {order.products.map((product) => (
-            <View key={product.id} style={styles.productCard}>
-              <View style={styles.productRow}>
-                <Text style={styles.productName}>{product.name}</Text>
-                <Text style={styles.productQty}>x{product.quantity}</Text>
-              </View>
+          <View style={styles.row}>
+            <FontAwesome5 name="user" size={18} color={theme.colors.onBackground} style={styles.icon} />
+            <View>
+              <Text style={[styles.label, { color: theme.colors.onBackground }]}>Клиент</Text>
+              <Text style={[styles.text, { color: theme.colors.onBackground }]}>{order.created_by}</Text>
             </View>
-          ))}
-        </View>
-        {order.status === "awaiting_courier" && (
-          <View style={styles.buttons}>
-            <TouchableOpacity
-              style={[styles.button, styles.accept]}
-              onPress={() => handleUpdateOrder(parseInt(id), "prepare")}
-            >
-              <Text style={styles.buttonText}>Принять</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.decline]}
-              onPress={() => handleUpdateOrder(parseInt(id), "canceled")}
-            >
-              <Text style={styles.buttonText}>Отклонить</Text>
-            </TouchableOpacity>
           </View>
-        )}
-      </View>
-    </ScrollView>
+          <View style={styles.divider} />
+
+          <View style={styles.row}>
+            <Entypo name="location-pin" size={20} style={styles.icon} color={theme.colors.onBackground} />
+            <View>
+              <Text style={[styles.label, { color: theme.colors.onBackground }]}>Адрес доставки</Text>
+              <Text style={[styles.text, { color: theme.colors.onBackground }]}>Улица Мустакиллик</Text>
+            </View>
+          </View>
+          <View style={styles.divider} />
+
+          <View style={styles.row}>
+            <FontAwesome5 name="money-bill-wave" size={18} color={theme.colors.onBackground} style={styles.icon} />
+            <View>
+              <Text style={[styles.label, { color: theme.colors.onBackground }]}>Сумма</Text>
+              <Text style={[styles.text, styles.price, , { color: theme.colors.onBackground }]}>
+                {order.total_price} ₽
+              </Text>
+            </View>
+          </View>
+          <View style={styles.divider} />
+
+          <View style={styles.row}>
+            <MaterialIcons name="local-shipping" size={20} color={theme.colors.onBackground} style={styles.icon} />
+            <View>
+              <Text style={[styles.label, { color: theme.colors.onBackground }]}>Статус</Text>
+              <OrderStatus status={order.status} />
+            </View>
+          </View>
+          <View style={styles.divider} />
+
+          <View style={styles.row}>
+            <MaterialIcons name="event" size={20} color={theme.colors.onBackground} style={styles.icon} />
+            <View>
+              <Text style={[styles.label, { color: theme.colors.onBackground }]}>Дата заказа</Text>
+              <Text style={[styles.text, { color: theme.colors.onBackground }]}>
+                {new Date(order.created_at).toLocaleString()}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.divider} />
+
+          <View>
+            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Состав заказа</Text>
+            {order.products.map((product) => (
+              <View key={product.id} style={styles.productCard}>
+                <View style={styles.productRow}>
+                  <Text style={styles.productName}>{product.name}</Text>
+                  <Text style={styles.productQty}>x{product.quantity}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+          {order.status === "awaiting_courier" && (
+            <View style={styles.buttons}>
+              <TouchableOpacity
+                style={[styles.button, styles.accept]}
+                onPress={() => handleUpdateOrder(parseInt(id), "prepare")}
+              >
+                <Text style={styles.buttonText}>Принять</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, styles.decline]}
+                onPress={() => handleUpdateOrder(parseInt(id), "canceled")}
+              >
+                <Text style={styles.buttonText}>Отклонить</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
 
-    flexGrow: 1,
+    // flexGrow: 1,
     marginBottom: 50,
   },
   card: {
