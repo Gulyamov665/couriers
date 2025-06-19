@@ -8,11 +8,12 @@ import { useUpdateOrderMutation } from "@store/services/orders/ordersApi";
 import { authState } from "@store/slices/auth";
 import { useSelector } from "react-redux";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { OrderStatus } from "common/OrderStatuses";
+import { RootStackParamList } from "app/navigation/RootNavigator";
+import { useTheme } from "hooks/useTheme";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Entypo from "react-native-vector-icons/Entypo";
-import { OrderStatus } from "common/OrderStatuses";
-import { RootStackParamList } from "app/navigation/RootNavigator";
 
 type OrderDetailsRouteProp = RouteProp<RootStackParamList, "OrderDetails">;
 
@@ -23,10 +24,11 @@ export const OrderDetailsScreen = () => {
   const [updateOrder] = useUpdateOrderMutation();
   const { userInfo } = useSelector(authState);
   const { navigate } = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
 
   if (!order) {
     return (
-      <View style={styles.centered}>
+      <View style={[styles.centered, { backgroundColor: theme.colors.background }]}>
         <ActivityIndicator size="large" color="#FFA500" />
       </View>
     );
@@ -48,57 +50,64 @@ export const OrderDetailsScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Заказ №{order.id}</Text>
+    <ScrollView
+      contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={[styles.card, { backgroundColor: theme.colors.onPrimary }]}>
+        <Text style={[styles.title, { color: theme.colors.onBackground }]}>Заказ №{order.id}</Text>
 
         <View style={styles.row}>
-          <FontAwesome5 name="user" size={18} color="#6B7280" style={styles.icon} />
+          <FontAwesome5 name="user" size={18} color={theme.colors.onBackground} style={styles.icon} />
           <View>
-            <Text style={styles.label}>Клиент</Text>
-            <Text style={styles.text}>{order.created_by}</Text>
+            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Клиент</Text>
+            <Text style={[styles.text, { color: theme.colors.onBackground }]}>{order.created_by}</Text>
           </View>
         </View>
         <View style={styles.divider} />
 
         <View style={styles.row}>
-          <Entypo name="location-pin" size={20} color="#6B7280" style={styles.icon} />
+          <Entypo name="location-pin" size={20} style={styles.icon} color={theme.colors.onBackground} />
           <View>
-            <Text style={styles.label}>Адрес доставки</Text>
-            <Text style={styles.text}>Улица Мустакиллик</Text>
+            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Адрес доставки</Text>
+            <Text style={[styles.text, { color: theme.colors.onBackground }]}>Улица Мустакиллик</Text>
           </View>
         </View>
         <View style={styles.divider} />
 
         <View style={styles.row}>
-          <FontAwesome5 name="money-bill-wave" size={18} color="#6B7280" style={styles.icon} />
+          <FontAwesome5 name="money-bill-wave" size={18} color={theme.colors.onBackground} style={styles.icon} />
           <View>
-            <Text style={styles.label}>Сумма</Text>
-            <Text style={[styles.text, styles.price]}>{order.total_price} ₽</Text>
+            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Сумма</Text>
+            <Text style={[styles.text, styles.price, , { color: theme.colors.onBackground }]}>
+              {order.total_price} ₽
+            </Text>
           </View>
         </View>
         <View style={styles.divider} />
 
         <View style={styles.row}>
-          <MaterialIcons name="local-shipping" size={20} color="#6B7280" style={styles.icon} />
+          <MaterialIcons name="local-shipping" size={20} color={theme.colors.onBackground} style={styles.icon} />
           <View>
-            <Text style={styles.label}>Статус</Text>
+            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Статус</Text>
             <OrderStatus status={order.status} />
           </View>
         </View>
         <View style={styles.divider} />
 
         <View style={styles.row}>
-          <MaterialIcons name="event" size={20} color="#6B7280" style={styles.icon} />
+          <MaterialIcons name="event" size={20} color={theme.colors.onBackground} style={styles.icon} />
           <View>
-            <Text style={styles.label}>Дата заказа</Text>
-            <Text style={styles.text}>{new Date(order.created_at).toLocaleString()}</Text>
+            <Text style={[styles.label, { color: theme.colors.onBackground }]}>Дата заказа</Text>
+            <Text style={[styles.text, { color: theme.colors.onBackground }]}>
+              {new Date(order.created_at).toLocaleString()}
+            </Text>
           </View>
         </View>
         <View style={styles.divider} />
 
         <View>
-          <Text style={styles.label}>Состав заказа</Text>
+          <Text style={[styles.label, { color: theme.colors.onBackground }]}>Состав заказа</Text>
           {order.products.map((product) => (
             <View key={product.id} style={styles.productCard}>
               <View style={styles.productRow}>
@@ -133,7 +142,7 @@ export const OrderDetailsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#F9FAFB",
+
     flexGrow: 1,
     marginBottom: 50,
   },

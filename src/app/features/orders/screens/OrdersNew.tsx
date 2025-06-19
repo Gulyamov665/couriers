@@ -6,12 +6,14 @@ import { useUpdateOrderMutation } from "@store/services/orders/ordersApi";
 import { authState } from "@store/slices/auth";
 import { useSocket } from "hooks/useSocket";
 import { OrderCard } from "app/components/OrderCard";
+import { useTheme } from "hooks/useTheme";
 
 export const OrdersNew = () => {
   const { userInfo } = useSelector(authState);
   const skip = { skip: !userInfo?.id };
   const { data, refetch, isLoading, isFetching } = useGetOrdersQuery({ id: String(userInfo?.id) }, skip);
   const [updateOrder] = useUpdateOrderMutation();
+  const { theme } = useTheme();
 
   useSocket(refetch);
 
@@ -30,7 +32,7 @@ export const OrdersNew = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <FlatList
         data={data}
         keyExtractor={(item) => String(item.id)}
@@ -56,8 +58,6 @@ export const OrdersNew = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
-    marginBottom: 70,
   },
   list: {
     padding: 16,

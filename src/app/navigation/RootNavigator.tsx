@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import BottomTabs from "./BottomTabs";
 import { LoginScreen } from "../features/login/LoginScreen";
 import { ErrorBoundary } from "../config/ErrorBoundary";
 import { useCheckAuth } from "../../hooks/useCheckAuth";
@@ -10,6 +9,12 @@ import { useSelector } from "react-redux";
 import { authState } from "../../store/slices/auth";
 import { useSetFcmTokenMutation } from "@store/services/auth/authApi";
 import { useNotifications } from "hooks/useNotification";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { PaperProvider } from "react-native-paper";
+import { useTheme } from "hooks/useTheme";
+import BottomTabs from "./BottomTabs";
 
 export type RootStackParamList = {
   Main: undefined;
@@ -30,6 +35,7 @@ export const RootNavigator = () => {
   const { isAuthenticated, isChecking } = useCheckAuth();
   const { fcmToken, user } = useSelector(authState);
   const [setTokenFCM] = useSetFcmTokenMutation();
+  const { theme, isDark } = useTheme();
 
   const setToken = async () => {
     await setTokenFCM({
@@ -44,24 +50,41 @@ export const RootNavigator = () => {
   if (isChecking) return <Loader />;
 
   return (
-    <ErrorBoundary>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: true, // свайп назад включён
-            animation: "slide_from_right",
-          }}
-        >
-          {isAuthenticated ? (
-            <>
-              <Stack.Screen name="Main" component={BottomTabs} />
-            </>
-          ) : (
-            <Stack.Screen name="Login" component={LoginScreen} />
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ErrorBoundary>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <SafeAreaView edges={["top", "bottom"]} style={{ flex: 1, backgroundColor: theme.colors.background }}>
+          <StatusBar
+            key={isDark ? "dark" : "light"}
+            translucent={false}
+            backgroundColor="transparent"
+            barStyle={isDark ? "light-content" : "dark-content"}
+          />
+          <PaperProvider theme={theme}>
+            <ErrorBoundary>
+              <NavigationContainer>
+                <Stack.Navigator
+                  screenOptions={{
+                    headerShown: false,
+                    gestureEnabled: true, // свайп назад включён
+                    animation: "slide_from_right",
+                    contentStyle: {
+                      backgroundColor: theme.colors.background,
+                    },
+                  }}
+                >
+                  {isAuthenticated ? (
+                    <>
+                      <Stack.Screen name="Main" component={BottomTabs} />
+                    </>
+                  ) : (
+                    <Stack.Screen name="Login" component={LoginScreen} />
+                  )}
+                </Stack.Navigator>
+              </NavigationContainer>
+            </ErrorBoundary>
+          </PaperProvider>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 };

@@ -1,14 +1,17 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ActiveOrdersStack } from "./ActiveOrdersStack";
 import { NewOrdersStack } from "./NewOrdersStack";
 import { ProfileScreen } from "../features/ProfileScreen";
 import { View } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useTheme } from "hooks/useTheme";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabs = () => {
+  const { theme } = useTheme();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -16,12 +19,13 @@ const BottomTabs = () => {
         tabBarShowLabel: true,
         tabBarActiveTintColor: "#34C759",
         tabBarStyle: {
+          elevation: 2,
           height: 60,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           borderBottomRightRadius: 20,
           borderBottomLeftRadius: 20,
-          backgroundColor: "#fff",
+          backgroundColor: theme.colors.surface,
           position: "absolute",
           display: "flex",
           marginLeft: 20,
@@ -42,12 +46,13 @@ const BottomTabs = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 height: "100%",
+                backgroundColor: "theme.colors.background",
               }}
             >
               <MaterialCommunityIcons
                 name={iconName}
                 size={focused ? 24 : 24}
-                color={color}
+                color={theme.colors.onBackground}
                 style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
               />
             </View>

@@ -6,6 +6,7 @@ import { OrderStatus } from "common/OrderStatuses";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "app/navigation/RootNavigator";
+import { useTheme } from "hooks/useTheme";
 
 export type AcceptedCardProps = {
   order: OrdersType;
@@ -14,6 +15,7 @@ export type AcceptedCardProps = {
 
 export const AcceptedCard: React.FC<AcceptedCardProps> = ({ order, onTheWay }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
 
   const handleCall = () => {
     Linking.openURL(`tel:${order.user_phone_number}`);
@@ -37,15 +39,14 @@ export const AcceptedCard: React.FC<AcceptedCardProps> = ({ order, onTheWay }) =
         })
       }
     >
-      <View style={styles.card}>
+      <View style={[styles.card, { backgroundColor: theme.colors.onPrimary }]}>
         <View style={styles.header}>
-          <Text style={styles.orderNumber}>Заказ #{order.id}</Text>
+          <Text style={[styles.orderNumber, { color: theme.colors.onBackground }]}>Заказ #{order.id}</Text>
           <OrderStatus status={order.status} />
         </View>
 
-        <Text style={styles.client}>Клиент: {order.created_by}</Text>
-        <Text style={styles.address}>{order.location.address}</Text>
-        {/* <Text style={styles.status}>Статус: В пути</Text> */}
+        <Text style={[styles.client, { color: theme.colors.onBackground }]}>Клиент: {order.created_by}</Text>
+        <Text style={[styles.address, { color: theme.colors.onBackground }]}>{order.location.address}</Text>
 
         {order.status === "prepare" && (
           <TouchableOpacity style={styles.ButtonGetOrder} onPress={onTheWay}>
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   ButtonGetOrder: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#FFA500",
     paddingVertical: 15,
     paddingHorizontal: 60,
     borderRadius: 8,

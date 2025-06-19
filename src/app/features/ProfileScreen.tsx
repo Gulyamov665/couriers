@@ -1,12 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Switch } from "react-native";
 import { useActions } from "../../hooks/useActions";
-import { useNotification } from "../../hooks/useNotification";
 import * as Keychain from "react-native-keychain";
+import { useSelector } from "react-redux";
+import { authState } from "@store/slices/auth";
+import { useTheme } from "hooks/useTheme";
+import { useTheme as usePaperTheme } from "react-native-paper";
 
 export const ProfileScreen = () => {
   const { logout } = useActions();
-  const token = useNotification();
+  const { userInfo } = useSelector(authState);
+  const { isDark, toggleTheme, theme } = useTheme();
+  const { colors } = usePaperTheme();
+
   const user = {
     name: "Убегай Сабир",
     email: "ubejal@example.com",
@@ -19,21 +25,24 @@ export const ProfileScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.avatarContainer}>
         <Image source={{ uri: user.avatar }} style={styles.avatar} />
-        <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.email}>{user.email}</Text>
+        <Text style={[styles.name, {color:theme.colors.onBackground}]}>{userInfo?.first_name}</Text>
+        <Text style={[styles.email, {color:theme.colors.onBackground}]}>{userInfo?.last_name}</Text>
       </View>
 
-      <View style={styles.separator} />
-      <TextInput
-        value={token || ""}
-        style={styles.tokenInput}
-        editable={true}
-        selectTextOnFocus={true}
-        multiline={true}
-      />
+      <View style={[styles.separator, {backgroundColor:theme.colors.onBackground}]} />
+      <View>
+        <Text style={[styles.label, { color: colors.onBackground }]}>Тёмная тема</Text>
+        <Switch
+          value={isDark}
+          onValueChange={toggleTheme}
+          thumbColor={isDark ? colors.primary : "#ccc"}
+          trackColor={{ false: "#aaa", true: colors.primary }}
+        />
+      </View>
+
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Выйти</Text>
       </TouchableOpacity>
@@ -44,7 +53,6 @@ export const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
     alignItems: "center",
     paddingTop: 60,
     paddingHorizontal: 20,
@@ -71,7 +79,6 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: "#DDD",
     width: "100%",
     marginVertical: 30,
   },
@@ -96,5 +103,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#DDD",
     minHeight: 50,
+  },
+  label: {
+    fontSize: 16,
   },
 });

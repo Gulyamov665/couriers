@@ -5,16 +5,18 @@ import { authState } from "../../../../store/slices/auth";
 import { AcceptedCard } from "../components/AcceptedCard";
 import { ActivityIndicator } from "react-native-paper";
 import { useGetCourierOrdersQuery, useUpdateOrderMutation } from "@store/services/orders/ordersApi";
+import { useTheme } from "hooks/useTheme";
 
 export const OrdersActive = () => {
   const { user } = useSelector(authState);
   const skip = { skip: !user?.user_id };
   const { data, isLoading, refetch } = useGetCourierOrdersQuery(user?.user_id ?? 0, skip);
   const [updateOrder] = useUpdateOrderMutation();
+  const { theme } = useTheme();
 
   if (!data)
     return (
-      <View style={styles.centered}>
+      <View style={[styles.centered, { backgroundColor: theme.colors.background }]}>
         <ActivityIndicator size="large" color="#FFA500" />
       </View>
     );
@@ -29,7 +31,7 @@ export const OrdersActive = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <FlatList
         data={data}
         keyExtractor={(item) => String(item.id)}
@@ -48,7 +50,6 @@ export const OrdersActive = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
   },
   list: {
     padding: 16,

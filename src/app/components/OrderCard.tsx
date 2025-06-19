@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { OrdersType } from "@store/services/orders/types";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useTheme } from "hooks/useTheme";
 
 type OrderCardProps = {
   order: OrdersType;
@@ -16,6 +17,7 @@ type OrderCardProps = {
 
 export const OrderCard = ({ order, onAccept, onDecline, isLoading }: OrderCardProps) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { theme } = useTheme();
 
   return (
     <Pressable
@@ -25,27 +27,29 @@ export const OrderCard = ({ order, onAccept, onDecline, isLoading }: OrderCardPr
         })
       }
     >
-      <View style={styles.card}>
+      <View style={[styles.card, { backgroundColor: theme.colors.onPrimary }]}>
         <View style={styles.header}>
-          <Text style={styles.orderId}>Заказ #{order.id}</Text>
-          <Text style={styles.price}>{Number(order.total_price).toLocaleString()} сум</Text>
+          <Text style={[styles.orderId, { color: theme.colors.onBackground }]}>Заказ #{order.id}</Text>
+          <Text style={[styles.price, { color: theme.colors.onBackground }]}>
+            {Number(order.total_price).toLocaleString()} сум
+          </Text>
         </View>
         <View style={styles.infoBox}>
-          <MaterialIcons name="person" size={20} />
-          <Text style={styles.customer}>{order.created_by}</Text>
+          <MaterialIcons name="person" size={20} color={theme.colors.onBackground} />
+          <Text style={[styles.customer, { color: theme.colors.onBackground }]}>{order.created_by}</Text>
         </View>
         <View style={styles.infoBox}>
-          <MaterialIcons name="location-on" size={20} />
-          <Text style={styles.address}>{order.location.address}</Text>
+          <MaterialIcons name="location-on" size={20} color={theme.colors.onBackground} />
+          <Text style={[styles.address, { color: theme.colors.onBackground }]}>{order.location.address}</Text>
         </View>
         <View style={styles.distance}>
           <View style={{ flexDirection: "row" }}>
-            <MaterialIcons name="social-distance" size={20} />
-            <Text style={styles.address}>{order.destination?.distance}</Text>
+            <MaterialIcons name="social-distance" size={20} color={theme.colors.onBackground} />
+            <Text style={[styles.address, { color: theme.colors.onBackground }]}>{order.destination?.distance}</Text>
           </View>
           <View style={{ flexDirection: "row" }}>
-            <MaterialIcons name="access-time" size={20} />
-            <Text style={styles.address}>{order.destination?.duration}</Text>
+            <MaterialIcons name="access-time" size={20} color={theme.colors.onBackground} />
+            <Text style={[styles.address, , { color: theme.colors.onBackground }]}>{order.destination?.duration}</Text>
           </View>
         </View>
 
