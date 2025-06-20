@@ -1,4 +1,3 @@
-// src/hooks/useNotificationChannel.ts
 import { useEffect } from "react";
 import { PermissionsAndroid, Platform } from "react-native";
 import notifee, { AndroidImportance } from "@notifee/react-native";
