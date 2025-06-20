@@ -16,11 +16,12 @@ const BottomTabs = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarShowLabel: true,
+        // tabBarShowLabel: true,
         tabBarActiveTintColor: "#34C759",
         tabBarStyle: {
           elevation: 2,
           height: 60,
+          borderTopColor: theme.colors.surface,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           borderBottomRightRadius: 20,

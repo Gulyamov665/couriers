@@ -14,6 +14,7 @@ import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
 import { useTheme } from "hooks/useTheme";
+import { DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from "@react-navigation/native";
 import BottomTabs from "./BottomTabs";
 
 export type RootStackParamList = {
@@ -47,6 +48,17 @@ export const RootNavigator = () => {
     if (fcmToken && user?.user_id) setToken();
   }, [fcmToken, isAuthenticated, user]);
 
+  const navigationTheme = {
+    ...(isDark ? NavigationDarkTheme : NavigationDefaultTheme),
+    colors: {
+      ...(isDark ? NavigationDarkTheme.colors : NavigationDefaultTheme.colors),
+      background: theme.colors.background, // <-- вот этот фон
+      card: theme.colors.background, // <-- фон «карточки» для native-stack
+      primary: theme.colors.primary, // <-- цвет кнопок/акцентов (опционально)
+      text: theme.colors.onBackground, // <-- цвет текста навигации
+    },
+  };
+
   if (isChecking) return <Loader />;
 
   return (
@@ -61,7 +73,7 @@ export const RootNavigator = () => {
           />
           <PaperProvider theme={theme}>
             <ErrorBoundary>
-              <NavigationContainer>
+              <NavigationContainer theme={navigationTheme}>
                 <Stack.Navigator
                   screenOptions={{
                     headerShown: false,

@@ -39,7 +39,9 @@ export const OrdersActive = () => {
           <AcceptedCard order={item} onTheWay={() => handleUpdateOrder(item.id, "on_the_way")} />
         )}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={<Text style={styles.empty}>Нет активных заказов</Text>}
+        ListEmptyComponent={
+          <Text style={[styles.empty, { color: theme.colors.onBackground }]}>Нет активных заказов</Text>
+        }
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} colors={["#FFA500"]} />}
         showsVerticalScrollIndicator={false}
       />
@@ -58,15 +60,7 @@ const styles = StyleSheet.create({
   empty: {
     textAlign: "center",
     marginTop: 40,
-    color: "#888",
     fontSize: 16,
-  },
-  buttonWrapper: {
-    padding: 16,
-    borderTopWidth: 1,
-    borderColor: "#E5E7EB",
-    backgroundColor: "#FFF",
-    borderTopRightRadius: 20,
   },
   centered: {
     flex: 1,

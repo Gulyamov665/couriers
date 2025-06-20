@@ -28,15 +28,16 @@ export const ProfileScreen = () => {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.avatarContainer}>
         <Image source={{ uri: user.avatar }} style={styles.avatar} />
-        <Text style={[styles.name, {color:theme.colors.onBackground}]}>{userInfo?.first_name}</Text>
-        <Text style={[styles.email, {color:theme.colors.onBackground}]}>{userInfo?.last_name}</Text>
+        <Text style={[styles.name, { color: theme.colors.onBackground }]}>{userInfo?.first_name}</Text>
+        <Text style={[styles.email, { color: theme.colors.onBackground }]}>{userInfo?.last_name}</Text>
       </View>
 
-      <View style={[styles.separator, {backgroundColor:theme.colors.onBackground}]} />
+      <View style={[styles.separator, { backgroundColor: theme.colors.onBackground }]} />
       <View>
         <Text style={[styles.label, { color: colors.onBackground }]}>Тёмная тема</Text>
         <Switch
           value={isDark}
+          key={isDark ? "dark" : "light"}
           onValueChange={toggleTheme}
           thumbColor={isDark ? colors.primary : "#ccc"}
           trackColor={{ false: "#aaa", true: colors.primary }}

@@ -26,4 +26,3 @@ export const darkTheme: Theme = {
     onBackground: "#ffffff",
   },
 };
-

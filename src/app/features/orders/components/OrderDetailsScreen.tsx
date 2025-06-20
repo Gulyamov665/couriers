@@ -50,9 +50,10 @@ export const OrderDetailsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}
+        style={{ flex: 1, backgroundColor: theme.colors.background }}
+        contentContainerStyle={[styles.container]}
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.card, { backgroundColor: theme.colors.onPrimary }]}>
@@ -144,12 +145,9 @@ export const OrderDetailsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-
-    // flexGrow: 1,
     marginBottom: 50,
   },
   card: {
-    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 20,
     elevation: 3,

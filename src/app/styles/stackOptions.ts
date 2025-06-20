@@ -1,19 +1,22 @@
-import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import { Theme } from "../styles/theme"; // ваш тип темы
+import type { StackNavigationOptions } from "@react-navigation/stack";
+import { CardStyleInterpolators } from "@react-navigation/stack";
+import type { Theme } from "../styles/theme";
 
-export function stackOptions(theme: Theme): NativeStackNavigationOptions {
+export function stackOptions(theme: Theme): StackNavigationOptions {
   return {
-    gestureEnabled: true, // свайп назад включён
-    animation: "slide_from_right", // анимация перехода
-
+    // включаем свайп‑назад
+    gestureEnabled: true,
+    // iOS‑style slide_from_right
+    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+    // фон «карточки» во время анимации
+    cardStyle: {
+      backgroundColor: theme.colors.background,
+    },
+    // заголовок
     headerStyle: {
       backgroundColor: theme.colors.background,
     },
-
-    // ↓↓↓ Цвет стрелки назад и других кнопок ↓↓↓
     headerTintColor: theme.colors.onBackground,
-
-    // ↓↓↓ Стиль текста заголовка ↓↓↓
     headerTitleStyle: {
       color: theme.colors.onBackground,
       fontSize: 18,
