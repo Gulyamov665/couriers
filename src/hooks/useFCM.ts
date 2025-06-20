@@ -33,7 +33,6 @@ export function useFCM(): string | null {
             sound: "sound",
             importance: AndroidImportance.HIGH,
             vibrationPattern: [300, 500],
-            pressAction: { id: "default" },
           },
         });
       });

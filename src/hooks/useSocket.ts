@@ -1,9 +1,13 @@
 import { OrdersType } from "@store/services/orders/types";
+import { authState } from "@store/slices/auth";
 import { useCallback, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import io from "socket.io-client";
+import notifee, { AndroidImportance } from "@notifee/react-native";
 
 export const useSocket = (updateOrders: () => void) => {
   const socketRef = useRef<any>(null);
+  const { userInfo } = useSelector(authState);
 
   useEffect(() => {
     const socket = io("https://new.aurora-api.uz", {
@@ -31,8 +35,21 @@ export const useSocket = (updateOrders: () => void) => {
       console.log("Socket connection error:", err);
     });
 
-    const handleUpdate = (order: OrdersType) => {
-      // console.log(order);
+    const handleUpdate = async (order: OrdersType) => {
+      const channel = userInfo?.channels.includes(order.restaurant.id);
+      if (channel && order.status === "awaiting_courier") {
+        await notifee.displayNotification({
+          title: "Новый заказ",
+          body: `Сокет #${order.id} ожидает подтверждения`,
+          android: {
+            channelId: "aurora",
+            sound: "sound",
+            importance: AndroidImportance.HIGH,
+            vibrationPattern: [300, 500],
+            // pressAction: { id: "default" },
+          },
+        });
+      }
     };
 
     socket.on("update_order", () => updateOrders());

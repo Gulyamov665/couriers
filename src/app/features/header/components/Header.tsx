@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Platform, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StackHeaderProps } from "@react-navigation/stack";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useTheme } from "hooks/useTheme";
 import type { TextStyle } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
 
-export const CustomHeader: React.FC<StackHeaderProps> = ({ navigation, route, options, back }) => {
+export const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation, route, options, back }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   //   const BASE_HEIGHT = 36; // 56 стандартная высота хедера без статус-бара

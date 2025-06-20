@@ -16,6 +16,7 @@ import { PaperProvider } from "react-native-paper";
 import { useTheme } from "hooks/useTheme";
 import { DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from "@react-navigation/native";
 import BottomTabs from "./BottomTabs";
+import { ActiveOrdersStack } from "./ActiveOrdersStack";
 
 export type RootStackParamList = {
   Main: undefined;
