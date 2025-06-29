@@ -12,7 +12,9 @@ export const OrdersActive = () => {
   const { user } = useSelector(authState);
   const skip = { skip: !user?.user_id };
   const { data, isLoading, refetch } = useGetCourierOrdersQuery(user?.user_id ?? 0, skip);
-  const [updateOrder] = useUpdateOrderMutation();
+  const [updateOrder, { isLoading: mutationLoading }] = useUpdateOrderMutation();
+  const [pendingId, setPendingId] = React.useState<number | null>(null);
+
   const { theme } = useTheme();
 
   if (!data)
@@ -23,6 +25,7 @@ export const OrdersActive = () => {
     );
 
   const handleUpdateOrder = async (id: number, status: string) => {
+    setPendingId(id);
     await updateOrder({
       id,
       body: {
@@ -37,7 +40,12 @@ export const OrdersActive = () => {
         data={data}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => (
-          <AcceptedCard order={item} onTheWay={() => handleUpdateOrder(item.id, "on_the_way")} />
+          <AcceptedCard
+            order={item}
+            onTheWay={() => handleUpdateOrder(item.id, "on_the_way")}
+            pendingId={pendingId}
+            isLoading={mutationLoading}
+          />
         )}
         contentContainerStyle={styles.list}
         ListEmptyComponent={

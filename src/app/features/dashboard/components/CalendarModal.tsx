@@ -1,9 +1,9 @@
 import React from "react";
-import { View, StyleSheet, Modal } from "react-native";
+import { View, StyleSheet, Modal, Text } from "react-native";
 import { Button } from "react-native-paper";
 import { Calendar } from "react-native-calendars";
-import type { DateData } from "react-native-calendars"; // тип даты для onDayPress
 import { Theme } from "app/styles/theme";
+import type { DateData } from "react-native-calendars"; // тип даты для onDayPress
 
 /**
  * Пропсы для CalendarModal
@@ -33,7 +33,13 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
 }) => {
   if (!visible) return null;
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent={true}
+      presentationStyle="overFullScreen"
+    >
       <View style={[styles.modalContainer]}>
         <View style={[styles.calendarBox, { backgroundColor: theme.colors.background }]}>
           <Calendar
@@ -46,7 +52,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
               textSectionTitleColor: "#b6c1cd",
               selectedDayBackgroundColor: "#34C759",
               selectedDayTextColor: "#ffffff",
-              todayTextColor: "#34C759",
+              todayTextColor: theme.colors.primary, // исправлено
               dayTextColor: theme.colors.onBackground, // исправлено
               textDisabledColor: "#d9e1e8",
               dotColor: "#00adf5",
@@ -58,10 +64,10 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
           />
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 16 }}>
             <Button mode="outlined" onPress={onCancel}>
-              Отмена
+              <Text style={{ color: theme.colors.onBackground }}>Отмена</Text>
             </Button>
             <Button mode="outlined" onPress={onApply}>
-              Применить
+              <Text style={{ color: theme.colors.onBackground }}>Применить</Text>
             </Button>
           </View>
         </View>
@@ -76,7 +82,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.3)",
-    // backgroundColor: "green",
   },
   calendarBox: {
     borderRadius: 12,

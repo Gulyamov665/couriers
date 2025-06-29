@@ -1,6 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { OrdersType } from "./types";
+import { GetCourierStatsResponse, OrdersType } from "./types";
 import { ordersQuery } from "../config/base";
+import { IPeriod } from "app/features/dashboard/CourierStatsScreen";
+import { queryLogger } from "app/tools/tools";
 
 export const ordersApi = createApi({
   reducerPath: "orders",
@@ -13,15 +15,7 @@ export const ordersApi = createApi({
         url: `/orders/status`,
         params: { status: "awaiting_courier", id },
       }),
-      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-      //   console.log("Query Started Orders get couries:", arg);
-      //   try {
-      //     const result = await queryFulfilled;
-      //     console.log("Query Success Orders get couries:", result.data);
-      //   } catch (error) {
-      //     console.error("Query Error Orders get couries:", error);
-      //   }
-      // },
+      // onQueryStarted: queryLogger("getOrders"),
       providesTags: ["orders"],
     }),
     updateOrder: build.mutation({
@@ -30,15 +24,7 @@ export const ordersApi = createApi({
         method: "PUT",
         body,
       }),
-      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-      //   console.log("Query Started OrdersUpdate:", arg);
-      //   try {
-      //     const result = await queryFulfilled;
-      //     console.log("Query Success OrdersUpdate:", result.data);
-      //   } catch (error) {
-      //     console.error("Query Error OrdersUpdate:", error);
-      //   }
-      // },
+      // onQueryStarted: queryLogger("updateOrder"),
       invalidatesTags: ["orders"],
     }),
 
@@ -58,15 +44,14 @@ export const ordersApi = createApi({
       query: (id) => ({
         url: `/orders/getCourierOrders/${id}`,
       }),
-      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-      //   console.log("Query Started getCourierOrders:", arg);
-      //   try {
-      //     const result = await queryFulfilled;
-      //     console.log("Query Success getCourierOrders:", result.data);
-      //   } catch (error) {
-      //     console.error("Query Error getCourierOrders:", error);
-      //   }
-      // },
+      // onQueryStarted: queryLogger("getCourierOrders"),
+      providesTags: ["orders"],
+    }),
+    getCourierStats: build.query<GetCourierStatsResponse, { id: number; period?: IPeriod }>({
+      query: ({ id, period }) => ({
+        url: `/orders/getCourierStats/${id}`,
+        params: { period: period?.value },
+      }),
       providesTags: ["orders"],
     }),
     //
@@ -76,6 +61,7 @@ export const ordersApi = createApi({
 export type getOrders = ReturnType<typeof useGetOrdersQuery>;
 export type getMyOrders = ReturnType<typeof useGetMyOrdersQuery>;
 export type getOrderById = ReturnType<typeof useGetOrderByIdQuery>;
+export type GetCourierStats = ReturnType<typeof useGetCourierStatsQuery>;
 
 export const {
   useGetOrdersQuery,
@@ -84,4 +70,5 @@ export const {
   useGetOrderByIdQuery,
   useUpdateOrderMutation,
   useGetCourierOrdersQuery,
+  useGetCourierStatsQuery,
 } = ordersApi;

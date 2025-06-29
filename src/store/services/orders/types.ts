@@ -58,6 +58,28 @@ export type OrdersData = {
   total: number;
 };
 
+export interface CourierStats {
+  today: {
+    deliveries: number;
+    earnings: number;
+    time: string;
+    goal: number;
+    yesterdayDeliveries: number;
+    yesterdayEarnings: number;
+  };
+  total: {
+    deliveries: number;
+    earnings: number;
+    avgTime: string;
+  };
+}
+
+// Ответ для getCourierStats
+export interface GetCourierStatsResponse {
+  orders: OrdersType[];
+  stats: CourierStats;
+}
+
 export type UserInfoType = {
   id: number;
   first_name: string;

@@ -15,7 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
 import { useTheme } from "hooks/useTheme";
 import { DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from "@react-navigation/native";
-import { useSocketStatus } from "hooks/useSocketStatus";
+// import { useSocketStatus } from "hooks/useSocketStatus";
 import BottomTabs from "./BottomTabs";
 
 export type RootStackParamList = {
@@ -37,7 +37,7 @@ export const RootNavigator = () => {
   const { isAuthenticated, isChecking } = useCheckAuth();
   const { fcmToken, user } = useSelector(authState);
   const [setTokenFCM] = useSetFcmTokenMutation();
-  const connected = useSocketStatus();
+  // const connected = useSocketStatus();
   const { theme, isDark } = useTheme();
 
   const setToken = async () => {
@@ -66,10 +66,6 @@ export const RootNavigator = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        {/* <SafeAreaView
-          edges={["top", "bottom"]}
-          style={{ flex: 1, backgroundColor: connected ? theme.colors.background : "red" }}
-        > */}
         <StatusBar
           key={isDark ? "dark" : "light"}
           translucent={false}
@@ -100,7 +96,6 @@ export const RootNavigator = () => {
             </NavigationContainer>
           </ErrorBoundary>
         </PaperProvider>
-        {/* </SafeAreaView> */}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

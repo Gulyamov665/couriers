@@ -13,12 +13,14 @@ export const OrdersNew = () => {
   const { userInfo } = useSelector(authState);
   const skip = { skip: !userInfo?.id };
   const { data, refetch, isLoading, isFetching } = useGetOrdersQuery({ id: String(userInfo?.id) }, skip);
-  const [updateOrder] = useUpdateOrderMutation();
+  const [updateOrder, { isLoading: mutationLoading }] = useUpdateOrderMutation();
+  const [pendingId, setPendingId] = React.useState<number | null>(null);
   const { theme } = useTheme();
 
   useSocket(refetch);
 
   const handleUpdateOrder = async (id: number, status: string) => {
+    setPendingId(id);
     await updateOrder({
       id,
       body: {
@@ -40,13 +42,16 @@ export const OrdersNew = () => {
         renderItem={({ item }) => (
           <OrderCard
             order={item}
-            isLoading={false}
+            isLoading={mutationLoading}
+            pendingId={pendingId}
             onAccept={() => handleUpdateOrder(item.id, "prepare")}
             onDecline={() => handleUpdateOrder(item.id, "canceled")}
           />
         )}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={<Text style={styles.empty}>Пока нет новых заказов</Text>}
+        ListEmptyComponent={
+          <Text style={[styles.empty, { color: theme.colors.onBackground }]}>Пока нет новых заказов</Text>
+        }
         refreshControl={
           <RefreshControl refreshing={isFetching || isLoading} onRefresh={refetch} colors={["#FFA500"]} />
         }

@@ -13,9 +13,10 @@ type OrderCardProps = {
   onAccept: () => void;
   onDecline: () => void;
   isLoading: boolean;
+  pendingId?: number | null;
 };
 
-export const OrderCard = ({ order, onAccept, onDecline, isLoading }: OrderCardProps) => {
+export const OrderCard = ({ order, onAccept, onDecline, isLoading, pendingId }: OrderCardProps) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { theme } = useTheme();
 
@@ -55,16 +56,20 @@ export const OrderCard = ({ order, onAccept, onDecline, isLoading }: OrderCardPr
 
         <View style={styles.buttons}>
           <TouchableOpacity
-            style={[styles.button, styles.accept, isLoading && styles.buttonDisabled]}
+            style={[styles.button, styles.accept, isLoading && order.id === pendingId && styles.buttonDisabled]}
             onPress={onAccept}
-            disabled={isLoading}
+            disabled={isLoading && order.id === pendingId}
           >
-            {isLoading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Принять</Text>}
+            {isLoading && order.id === pendingId ? (
+              <ActivityIndicator style={styles.buttonText} color={theme.customColors.orange} />
+            ) : (
+              <Text style={styles.buttonText}>Принять</Text>
+            )}
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button, styles.decline]} onPress={onDecline}>
+          {/* <TouchableOpacity style={[styles.button, styles.decline]} onPress={onDecline}>
             <Text style={styles.buttonText}>Отклонить</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </Pressable>
@@ -113,10 +118,10 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   button: {
-    flex: 0.48,
+    flex: 1,
     paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",

@@ -4,13 +4,21 @@ import { useTheme } from "hooks/useTheme";
 import { useTheme as usePaperTheme } from "react-native-paper";
 import { Menu } from "react-native-paper";
 import { CalendarModal } from "./components/CalendarModal";
+import { useSelector } from "react-redux";
+import { authState } from "@store/slices/auth";
+import { useGetCourierStatsQuery } from "@store/services/orders/ordersApi";
 import ThemedView from "app/components/ThemedView";
+
+export interface IPeriod {
+  value: "today" | "week" | "month" | "period";
+  label: "Сегодня" | "Неделя" | "Месяц" | "Период";
+}
 
 export const CourierStatsScreen = () => {
   const { theme } = useTheme();
   const { colors } = usePaperTheme();
   const [visible, setVisible] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState("Сегодня");
+  const [selectedPeriod, setSelectedPeriod] = useState<IPeriod>({ value: "today", label: "Сегодня" });
   const [range, setRange] = useState<{ startDate: Date | undefined; endDate: Date | undefined }>({
     startDate: undefined,
     endDate: undefined,
@@ -20,30 +28,21 @@ export const CourierStatsScreen = () => {
   const [endDate, setEndDate] = useState<string | null>(null);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+  const { user } = useSelector(authState);
+  const skip = { skip: !user?.user_id };
+  const { data, isLoading, refetch } = useGetCourierStatsQuery(
+    { id: user?.user_id ?? 0, period: selectedPeriod },
+    skip
+  );
 
-  const handleSelect = (value: string) => {
+  if (!data) return;
+  const handleSelect = (value: IPeriod) => {
     setSelectedPeriod(value);
     setRange({ startDate: undefined, endDate: undefined });
     closeMenu();
   };
 
-  const stats = {
-    today: {
-      deliveries: 20,
-      earnings: 0,
-      time: "0ч 0м",
-      goal: 20, // цель по заказам
-      yesterdayDeliveries: 10,
-      yesterdayEarnings: 27000,
-    },
-    total: {
-      deliveries: 240,
-      earnings: 525000,
-      avgTime: "38 мин",
-    },
-  };
-
-  const deliveryProgress = stats.today.deliveries / stats.today.goal;
+  const deliveryProgress = data?.stats.today.deliveries / data.stats.today.goal;
   const deliveryPercent = Math.round(deliveryProgress * 100);
 
   const onDayPress = (day: any) => {
@@ -100,7 +99,7 @@ export const CourierStatsScreen = () => {
             startDate: startDate ? new Date(startDate) : undefined,
             endDate: endDate ? new Date(endDate) : undefined,
           });
-          setSelectedPeriod("Период");
+          setSelectedPeriod({ value: "period", label: "Период" });
         }}
         onDayPress={onDayPress}
         markedDates={getMarkedDates()}
@@ -119,16 +118,14 @@ export const CourierStatsScreen = () => {
               onDismiss={closeMenu}
               contentStyle={{ backgroundColor: theme.colors.background, borderRadius: 12, marginTop: 8 }}
               anchor={
-                // <Button mode="text" >
                 <Text onPress={openMenu} style={styles.heroTitle}>
-                  {selectedPeriod}
+                  {selectedPeriod.label}
                 </Text>
-                // </Button>
               }
             >
-              <Menu.Item onPress={() => handleSelect("Сегодня")} title="Сегодня" />
-              <Menu.Item onPress={() => handleSelect("Неделя")} title="Неделя" />
-              <Menu.Item onPress={() => handleSelect("Месяц")} title="Месяц" />
+              <Menu.Item onPress={() => handleSelect({ value: "today", label: "Сегодня" })} title="Сегодня" />
+              <Menu.Item onPress={() => handleSelect({ value: "week", label: "Неделя" })} title="Неделя" />
+              <Menu.Item onPress={() => handleSelect({ value: "month", label: "Месяц" })} title="Месяц" />
               <Menu.Item
                 onPress={() => {
                   closeMenu();
@@ -138,10 +135,10 @@ export const CourierStatsScreen = () => {
               />
             </Menu>
           </View>
-          <Text style={styles.heroEarnings}>{stats.today.earnings.toLocaleString()} сум</Text>
+          <Text style={styles.heroEarnings}>{data?.stats.today.earnings.toLocaleString()} сум</Text>
           <View style={styles.heroRow}>
-            <Text style={styles.heroSub}>📦 {stats.today.deliveries} заказов</Text>
-            <Text style={styles.heroSub}>🕒 {stats.today.time}</Text>
+            <Text style={styles.heroSub}>📦 {data?.stats.today.deliveries} заказов</Text>
+            <Text style={styles.heroSub}>🕒 {data?.stats.today.time}</Text>
           </View>
         </View>
 
@@ -170,10 +167,10 @@ export const CourierStatsScreen = () => {
         </View>
 
         {/* Прогресс */}
-        <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.cardTitle, { color: colors.primary }]}>Прогресс</Text>
+        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+          <Text style={[styles.cardTitle, { color: theme.colors.onBackground }]}>Прогресс</Text>
           <Text style={{ color: colors.onSurface }}>
-            {stats.today.deliveries} из {stats.today.goal} заказов
+            {data?.stats.today.deliveries} из {data?.stats.today.goal} заказов
           </Text>
           <View style={styles.progressBar}>
             <View
@@ -191,31 +188,31 @@ export const CourierStatsScreen = () => {
 
         {/* Сравнение */}
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.cardTitle, { color: colors.primary }]}>Сравнение с вчерашним</Text>
+          <Text style={[styles.cardTitle, { color: theme.colors.onBackground }]}>Сравнение с вчерашним</Text>
           <Text style={{ color: colors.onSurface }}>
-            📈 +{stats.today.deliveries - stats.today.yesterdayDeliveries} заказов
+            📈 +{data?.stats.today.deliveries - data?.stats.today.yesterdayDeliveries} заказов
           </Text>
           <Text style={{ color: colors.onSurface }}>
-            💵 +{stats.today.earnings - stats.today.yesterdayEarnings} сум
+            💵 +{data?.stats.today.earnings - data?.stats.today.yesterdayEarnings} сум
           </Text>
         </View>
 
         {/* Общая статистика */}
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.cardTitle, { color: colors.primary }]}>Общая статистика</Text>
+          <Text style={[styles.cardTitle, { color: theme.colors.onBackground }]}>Общая статистика</Text>
           <View style={styles.statRow}>
             <Text style={[styles.label, { color: colors.onBackground }]}>Всего заказов</Text>
-            <Text style={[styles.value, { color: colors.onBackground }]}>{stats.total.deliveries}</Text>
+            <Text style={[styles.value, { color: colors.onBackground }]}>{data?.stats.total.deliveries}</Text>
           </View>
           <View style={styles.statRow}>
             <Text style={[styles.label, { color: colors.onBackground }]}>Общий доход</Text>
             <Text style={[styles.value, { color: colors.onBackground }]}>
-              {stats.total.earnings.toLocaleString()} сум
+              {data?.stats.total.earnings.toLocaleString()} сум
             </Text>
           </View>
           <View style={styles.statRow}>
             <Text style={[styles.label, { color: colors.onBackground }]}>Среднее время</Text>
-            <Text style={[styles.value, { color: colors.onBackground }]}>{stats.total.avgTime}</Text>
+            <Text style={[styles.value, { color: colors.onBackground }]}>{data?.stats.total.avgTime}</Text>
           </View>
         </View>
       </ScrollView>

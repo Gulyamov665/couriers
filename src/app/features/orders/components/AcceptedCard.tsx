@@ -1,6 +1,6 @@
 import React from "react";
 import { OrdersType } from "@store/services/orders/types";
-import { View, Text, Linking, Platform, Pressable } from "react-native";
+import { View, Text, Linking, Platform, Pressable, ActivityIndicator } from "react-native";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { OrderStatus } from "common/OrderStatuses";
 import { useNavigation } from "@react-navigation/native";
@@ -11,9 +11,11 @@ import { useTheme } from "hooks/useTheme";
 export type AcceptedCardProps = {
   order: OrdersType;
   onTheWay: () => Promise<void>;
+  pendingId?: number | null;
+  isLoading?: boolean;
 };
 
-export const AcceptedCard: React.FC<AcceptedCardProps> = ({ order, onTheWay }) => {
+export const AcceptedCard: React.FC<AcceptedCardProps> = ({ order, onTheWay, isLoading, pendingId }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { theme } = useTheme();
 
@@ -49,9 +51,13 @@ export const AcceptedCard: React.FC<AcceptedCardProps> = ({ order, onTheWay }) =
         <Text style={[styles.address, { color: theme.colors.onBackground }]}>{order.location.address}</Text>
 
         {order.status === "prepare" && (
-          <TouchableOpacity style={styles.ButtonGetOrder} onPress={onTheWay}>
-            <Text style={styles.ButtonText}>Доставить</Text>
-          </TouchableOpacity>
+          <Pressable style={styles.ButtonGetOrder} onPress={onTheWay} disabled={isLoading && order.id === pendingId}>
+            {isLoading && order.id === pendingId ? (
+              <ActivityIndicator size={22} style={styles.ButtonText} color={theme.customColors.white} />
+            ) : (
+              <Text style={[styles.ButtonText, { color: theme.customColors.white }]}>Доставить</Text>
+            )}
+          </Pressable>
         )}
 
         {order.status === "on_the_way" && (
@@ -143,6 +149,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   ButtonGetOrder: {
+    flex: 1,
     backgroundColor: "#FFA500",
     paddingVertical: 15,
     paddingHorizontal: 60,
@@ -151,9 +158,10 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   ButtonText: {
-    textAlign: "center",
-    color: "#F5F5F5",
-    fontWeight: "500",
     fontSize: 16,
+    fontWeight: "600",
+    paddingTop: 5,
+    paddingBottom: 5,
+    textAlign: "center",
   },
 });
