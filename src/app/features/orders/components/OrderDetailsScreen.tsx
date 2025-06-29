@@ -14,6 +14,8 @@ import { useTheme } from "hooks/useTheme";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Entypo from "react-native-vector-icons/Entypo";
+import { SwipeToComplete } from "common/SwipeToComplete";
+import ThemedView from "app/components/ThemedView";
 
 type OrderDetailsRouteProp = RouteProp<RootStackParamList, "OrderDetails">;
 
@@ -23,7 +25,7 @@ export const OrderDetailsScreen = () => {
   const { data: order } = useGetOrderByIdQuery(id);
   const [updateOrder] = useUpdateOrderMutation();
   const { userInfo } = useSelector(authState);
-  const { navigate } = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { theme } = useTheme();
 
   if (!order) {
@@ -46,11 +48,11 @@ export const OrderDetailsScreen = () => {
         },
       },
     }).unwrap();
-    navigate("OrdersList");
+    navigation.goBack();
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <ThemedView style={{ flex: 1 }}>
       <ScrollView
         style={{ flex: 1, backgroundColor: theme.colors.background }}
         contentContainerStyle={[styles.container]}
@@ -137,15 +139,31 @@ export const OrderDetailsScreen = () => {
             </View>
           )}
         </View>
+        {order.status === "on_the_way" && (
+          <View style={{ marginBottom: 70 }}>
+            <SwipeToComplete
+              onComplete={() => handleUpdateOrder(parseInt(id), "completed")}
+              status={order.status !== "on_the_way"}
+            />
+          </View>
+        )}
+        {order.status === "completed" && (
+          <View>
+            <SwipeToComplete
+              onComplete={() => handleUpdateOrder(parseInt(id), "completed")}
+              status={order.status === "completed"}
+            />
+          </View>
+        )}
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    marginBottom: 50,
+    // marginBottom: 30,
   },
   card: {
     borderRadius: 12,
@@ -155,7 +173,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
-    marginBottom: 50,
+    marginBottom: 30,
   },
   title: {
     fontSize: 22,

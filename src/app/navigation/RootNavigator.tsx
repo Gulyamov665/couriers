@@ -15,8 +15,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
 import { useTheme } from "hooks/useTheme";
 import { DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from "@react-navigation/native";
+import { useSocketStatus } from "hooks/useSocketStatus";
 import BottomTabs from "./BottomTabs";
-import { ActiveOrdersStack } from "./ActiveOrdersStack";
 
 export type RootStackParamList = {
   Main: undefined;
@@ -37,6 +37,7 @@ export const RootNavigator = () => {
   const { isAuthenticated, isChecking } = useCheckAuth();
   const { fcmToken, user } = useSelector(authState);
   const [setTokenFCM] = useSetFcmTokenMutation();
+  const connected = useSocketStatus();
   const { theme, isDark } = useTheme();
 
   const setToken = async () => {
@@ -65,38 +66,41 @@ export const RootNavigator = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <SafeAreaView edges={["top", "bottom"]} style={{ flex: 1, backgroundColor: theme.colors.background }}>
-          <StatusBar
-            key={isDark ? "dark" : "light"}
-            translucent={false}
-            backgroundColor="transparent"
-            barStyle={isDark ? "light-content" : "dark-content"}
-          />
-          <PaperProvider theme={theme}>
-            <ErrorBoundary>
-              <NavigationContainer theme={navigationTheme}>
-                <Stack.Navigator
-                  screenOptions={{
-                    headerShown: false,
-                    gestureEnabled: true, // свайп назад включён
-                    animation: "slide_from_right",
-                    contentStyle: {
-                      backgroundColor: theme.colors.background,
-                    },
-                  }}
-                >
-                  {isAuthenticated ? (
-                    <>
-                      <Stack.Screen name="Main" component={BottomTabs} />
-                    </>
-                  ) : (
-                    <Stack.Screen name="Login" component={LoginScreen} />
-                  )}
-                </Stack.Navigator>
-              </NavigationContainer>
-            </ErrorBoundary>
-          </PaperProvider>
-        </SafeAreaView>
+        {/* <SafeAreaView
+          edges={["top", "bottom"]}
+          style={{ flex: 1, backgroundColor: connected ? theme.colors.background : "red" }}
+        > */}
+        <StatusBar
+          key={isDark ? "dark" : "light"}
+          translucent={false}
+          backgroundColor="transparent"
+          barStyle={isDark ? "light-content" : "dark-content"}
+        />
+        <PaperProvider theme={theme}>
+          <ErrorBoundary>
+            <NavigationContainer theme={navigationTheme}>
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  gestureEnabled: true, // свайп назад включён
+                  animation: "slide_from_right",
+                  contentStyle: {
+                    backgroundColor: theme.colors.background,
+                  },
+                }}
+              >
+                {isAuthenticated ? (
+                  <>
+                    <Stack.Screen name="Main" component={BottomTabs} />
+                  </>
+                ) : (
+                  <Stack.Screen name="Login" component={LoginScreen} />
+                )}
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ErrorBoundary>
+        </PaperProvider>
+        {/* </SafeAreaView> */}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

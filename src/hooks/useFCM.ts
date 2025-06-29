@@ -7,6 +7,7 @@ import { useActions } from "./useActions";
 export function useFCM(): string | null {
   const [token, setToken] = useState<string | null>(null);
   const { setFCMToken } = useActions();
+
   const app = getApp();
   const messaging = getMessaging(app);
 
@@ -19,28 +20,29 @@ export function useFCM(): string | null {
       if (fcmToken) {
         setFCMToken(fcmToken);
         setToken(fcmToken);
-        // console.log("✅ FCM token:", fcmToken);
       }
 
       // 2. Подписываемся на foreground-пуши
-      unsubscribe = onMessage(messaging, async (remoteMessage) => {
-        console.log("📩 Foreground FCM message:", remoteMessage);
-        await notifee.displayNotification({
-          title: remoteMessage.notification?.title,
-          body: remoteMessage.notification?.body,
-          android: {
-            channelId: "aurora",
-            sound: "sound",
-            importance: AndroidImportance.HIGH,
-            vibrationPattern: [300, 500],
-          },
-        });
-      });
+      // unsubscribe = onMessage(messaging, async (remoteMessage) => {
+      //   console.log("📩 Foreground FCM message:", remoteMessage);
+      //   await notifee.displayNotification({
+      //     title: remoteMessage.data?.title != null ? String(remoteMessage.data.title) : undefined,
+      //     body: remoteMessage.data?.body != null ? String(remoteMessage.data.body) : undefined,
+      //     // title: remoteMessage.data?.title,
+      //     // body: remoteMessage.data?.body,
+      //     android: {
+      //       channelId: "aurora",
+      //       sound: "sound",
+      //       importance: AndroidImportance.HIGH,
+      //       vibrationPattern: [300, 500],
+      //     },
+      //   });
+      // });
     })().catch(console.error);
 
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    // return () => {
+    //   if (unsubscribe) unsubscribe();
+    // };
   }, [messaging, setFCMToken]);
 
   return token;

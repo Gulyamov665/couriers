@@ -1,19 +1,19 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AuthInitialState} from './types';
-import {RootState} from '..';
-import {CustomJwtPayload} from '@store/middlewares/auth';
-import {UserInfoType} from '@store/services/orders/types';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AuthInitialState } from "./types";
+import { RootState } from "..";
+import { CustomJwtPayload } from "@store/middlewares/auth";
+import { UserInfoType } from "@store/services/orders/types";
 
 const initialState: AuthInitialState = {
   user: null,
   token: false,
   isAuthenticated: false,
-  fcmToken: '',
+  fcmToken: "",
   userInfo: null,
 };
 
 const authSlice = createSlice({
-  name: 'authState',
+  name: "authState",
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<CustomJwtPayload>) => {
@@ -26,7 +26,7 @@ const authSlice = createSlice({
     setUserInfo: (state, action: PayloadAction<UserInfoType>) => {
       state.userInfo = action.payload;
     },
-    clearUser: state => {
+    clearUser: (state) => {
       state.user = null;
       state.isAuthenticated = false;
     },
@@ -40,13 +40,6 @@ const authSlice = createSlice({
 });
 
 export const authState = (state: RootState) => state.authState;
-export const {
-  setUser,
-  setToken,
-  clearUser,
-  setIsAuthenticated,
-  setFCMToken,
-  setUserInfo,
-} = authSlice.actions;
+export const { setUser, setToken, clearUser, setIsAuthenticated, setFCMToken, setUserInfo } = authSlice.actions;
 
 export default authSlice.reducer;

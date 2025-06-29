@@ -6,6 +6,7 @@ import { AcceptedCard } from "../components/AcceptedCard";
 import { ActivityIndicator } from "react-native-paper";
 import { useGetCourierOrdersQuery, useUpdateOrderMutation } from "@store/services/orders/ordersApi";
 import { useTheme } from "hooks/useTheme";
+import ThemedView from "app/components/ThemedView";
 
 export const OrdersActive = () => {
   const { user } = useSelector(authState);
@@ -31,7 +32,7 @@ export const OrdersActive = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <ThemedView safe style={[styles.container]}>
       <FlatList
         data={data}
         keyExtractor={(item) => String(item.id)}
@@ -45,7 +46,7 @@ export const OrdersActive = () => {
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} colors={["#FFA500"]} />}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </ThemedView>
   );
 };
 

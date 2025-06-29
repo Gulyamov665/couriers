@@ -7,6 +7,7 @@ import { authState } from "@store/slices/auth";
 import { useSocket } from "hooks/useSocket";
 import { OrderCard } from "app/components/OrderCard";
 import { useTheme } from "hooks/useTheme";
+import ThemedView from "app/components/ThemedView";
 
 export const OrdersNew = () => {
   const { userInfo } = useSelector(authState);
@@ -32,7 +33,7 @@ export const OrdersNew = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <ThemedView safe style={[styles.container]}>
       <FlatList
         data={data}
         keyExtractor={(item) => String(item.id)}
@@ -51,7 +52,7 @@ export const OrdersNew = () => {
         }
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </ThemedView>
   );
 };
 

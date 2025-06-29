@@ -1,3 +1,4 @@
+import { getSocket } from "lib/socketInstance";
 import { useEffect } from "react";
 import { NativeModules, Platform } from "react-native";
 
@@ -11,8 +12,9 @@ export function useForegroundSocketService() {
 
   useEffect(() => {
     if (Platform.OS === "android" && SocketServiceModule?.startSocketService) {
+      getSocket();
       SocketServiceModule.startSocketService();
-    //   console.log("✅ SocketServiceModule.startSocketService()");
+      //   console.log("✅ SocketServiceModule.startSocketService()");
     }
 
     return () => {

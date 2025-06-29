@@ -1,6 +1,6 @@
 import React from "react";
 import { OrdersType } from "@store/services/orders/types";
-import { View, Text, Linking, Platform, Pressable, Button } from "react-native";
+import { View, Text, Linking, Platform, Pressable } from "react-native";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { OrderStatus } from "common/OrderStatuses";
 import { useNavigation } from "@react-navigation/native";
@@ -56,11 +56,17 @@ export const AcceptedCard: React.FC<AcceptedCardProps> = ({ order, onTheWay }) =
 
         {order.status === "on_the_way" && (
           <View style={styles.actions}>
-            <TouchableOpacity style={styles.actionBtn} onPress={handleCall}>
-              <Text style={styles.actionText}>📞 Позвонить</Text>
+            <TouchableOpacity
+              style={[styles.actionBtn, { backgroundColor: theme.customColors.btnGreen }]}
+              onPress={handleCall}
+            >
+              <Text style={[styles.actionText, { color: theme.customColors.white }]}>📞 Позвонить</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionBtn} onPress={handleOpenMap}>
-              <Text style={styles.actionText}>📍 Маршрут</Text>
+            <TouchableOpacity
+              style={[styles.actionBtn, { backgroundColor: theme.customColors.orange }]}
+              onPress={handleOpenMap}
+            >
+              <Text style={[styles.actionText, { color: theme.customColors.white }]}>📍 Маршрут</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     gap: 12,
     marginTop: 14,
   },
@@ -127,11 +133,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 8,
+    width: "40%",
   },
   actionText: {
     color: "#333",
-    fontWeight: "500",
     fontSize: 14,
+    fontWeight: "600",
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   ButtonGetOrder: {
     backgroundColor: "#FFA500",

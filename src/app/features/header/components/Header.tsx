@@ -5,6 +5,7 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useTheme } from "hooks/useTheme";
 import type { TextStyle } from "react-native";
 import IonIcon from "react-native-vector-icons/Ionicons";
+import ThemedView from "app/components/ThemedView";
 
 export const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation, route, options, back }) => {
   const insets = useSafeAreaInsets();
@@ -18,13 +19,11 @@ export const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation, rou
 
   const titleStyle = options.headerTitleStyle as TextStyle | undefined;
   return (
-    <View
+    <ThemedView
+      safe
       style={{
-        paddingTop: 10,
-        // height: statusBarHeight,
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: theme.colors.background,
         paddingHorizontal: 16,
       }}
     >
@@ -44,6 +43,6 @@ export const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation, rou
       >
         {title}
       </Text>
-    </View>
+    </ThemedView>
   );
 };

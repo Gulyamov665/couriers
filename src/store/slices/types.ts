@@ -1,5 +1,5 @@
-import {CustomJwtPayload} from '@store/middlewares/auth';
-import {UserInfoType} from '../services/orders/types';
+import { CustomJwtPayload } from "@store/middlewares/auth";
+import { UserInfoType } from "../services/orders/types";
 
 export type AuthInitialState = {
   user: CustomJwtPayload | null;
@@ -8,3 +8,7 @@ export type AuthInitialState = {
   fcmToken: string;
   userInfo: UserInfoType | null;
 };
+
+export interface NotificationState {
+  lastOrderId?: number | null;
+}
